@@ -20,6 +20,9 @@ namespace MVVM {
             get {
                 return canvasAction ?? (canvasAction = new RelayCommand(obj => {
                     // some actions
+                    //bool val = AllowNode;
+                    //bool val1 = AllowEdge;
+                    //bool val2 = AllowSelect;
                 }));
             }
         }

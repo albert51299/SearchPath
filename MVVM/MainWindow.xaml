@@ -21,7 +21,7 @@
                 </Trigger>
             </Style.Triggers>
         </Style>
-        <ControlTemplate TargetType="RadioButton" x:Key="rbT">
+        <ControlTemplate TargetType="RadioButton" x:Key="radio">
             <Border BorderBrush="{TemplateBinding Property=BorderBrush}" BorderThickness="{TemplateBinding Property=BorderThickness}">
                 <ContentControl Content="{TemplateBinding Content}"/>
             </Border>
@@ -29,13 +29,13 @@
     </Window.Resources>
     <Grid>
         <GridSplitter HorizontalAlignment="Left" Height="0" Margin="0,30,0,0" VerticalAlignment="Top" Width="792" RenderTransformOrigin="0.185,-10.077"/>
-        <RadioButton Name="rbNode" Template="{StaticResource rbT}" Width="50" Height="20" HorizontalAlignment="Left" VerticalAlignment="Top" RenderTransformOrigin="3.634,9.688" Margin="10,10,0,0">
+        <RadioButton IsChecked="{Binding AllowNode}" Name="rbNode" Template="{StaticResource radio}" Width="50" Height="20" HorizontalAlignment="Left" VerticalAlignment="Top" RenderTransformOrigin="3.634,9.688" Margin="10,10,0,0">
             <Image Source="Images/ImageForNode1.png" />
         </RadioButton>
-        <RadioButton Name="rbEdge" Template="{StaticResource rbT}" Width="45" Height="20" HorizontalAlignment="Left" Margin="62,10,0,0" VerticalAlignment="Top">
+        <RadioButton IsChecked="{Binding AllowEdge}" Name="rbEdge" Template="{StaticResource radio}" Width="45" Height="20" HorizontalAlignment="Left" Margin="62,10,0,0" VerticalAlignment="Top">
             <Image Source="Images/Edge.png"/>
         </RadioButton>
-        <RadioButton Name="rbSelect" Template="{StaticResource rbT}" Width="60" Height="20" HorizontalAlignment="Left" Margin="109,10,0,0" VerticalAlignment="Top">
+        <RadioButton IsChecked="{Binding AllowSelect}" Name="rbSelect" Template="{StaticResource radio}" Width="60" Height="20" HorizontalAlignment="Left" Margin="109,10,0,0" VerticalAlignment="Top">
             <Image Source="Images/Select.png"/>
         </RadioButton>
         <Button Name="btnClear" Content="Clear" HorizontalAlignment="Left" Margin="627,8,0,0" VerticalAlignment="Top" Width="75"/>
