@@ -26,4 +26,9 @@ namespace MVVM
             Cost = (new Random()).Next(1, 20);
         }
     }
+
+    class Graph {
+        private List<Node> nodes = new List<Node>();
+        private List<Edge> edges = new List<Edge>();
+    }
 }

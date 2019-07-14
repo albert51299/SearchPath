@@ -9,10 +9,22 @@ using System.Windows.Shapes;
 
 namespace MVVM {
     class AppViewModel {
-        public ObservableCollection<NodeVM> Nodes { get; set; }
+        public ObservableCollection<NodeVM> NodesVM { get; set; }
+        public bool AllowNode { get; set; }
+        public bool AllowEdge { get; set; }
+        public bool AllowSelect { get; set; }
+        private RelayCommand canvasAction;
+        public RelayCommand CanvasAction {
+            get {
+                return canvasAction ?? (canvasAction = new RelayCommand(obj => {
+                    // some actions
+                    // obj as point
+                }));
+            }
+        }
 
         public AppViewModel() {
-            Nodes = new ObservableCollection<NodeVM> {
+            NodesVM = new ObservableCollection<NodeVM> {
                 new NodeVM("A"),
                 new NodeVM("B"),
                 new NodeVM("C")

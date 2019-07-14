@@ -41,7 +41,7 @@
         <Button Name="btnClear" Content="Clear" HorizontalAlignment="Left" Margin="627,8,0,0" VerticalAlignment="Top" Width="75"/>
         <Button Name="btnSearch" Content="Search path" HorizontalAlignment="Left" Margin="707,8,0,0" VerticalAlignment="Top" Width="75"/>
 
-        <ItemsControl ItemsSource="{Binding Nodes}">
+        <ItemsControl ItemsSource="{Binding NodesVM}">
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
                     <Canvas Background="White" Width="500" Height="500"  />
@@ -50,7 +50,7 @@
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
                     <Canvas Width="25" Height="25">
-                        <Ellipse Fill="Green" Width="25" Height="25"/>
+                        <Ellipse Fill="Red" Width="25" Height="25"/>
                         <TextBlock Text="{Binding Node}"></TextBlock>
                     </Canvas>
                 </DataTemplate>
