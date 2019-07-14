@@ -13,12 +13,13 @@ namespace MVVM {
         public bool AllowNode { get; set; }
         public bool AllowEdge { get; set; }
         public bool AllowSelect { get; set; }
+        public double MouseX { get; set; }
+        public double MouseY { get; set; }
         private RelayCommand canvasAction;
         public RelayCommand CanvasAction {
             get {
                 return canvasAction ?? (canvasAction = new RelayCommand(obj => {
                     // some actions
-                    // obj as point
                 }));
             }
         }

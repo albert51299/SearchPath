@@ -44,12 +44,21 @@
         <ItemsControl ItemsSource="{Binding NodesVM}">
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
-                    <Canvas Background="White" Width="500" Height="500"  />
+                    <Canvas Background="Blue" HorizontalAlignment="Left" Height="375" Margin="10,35,0,0" VerticalAlignment="Top" Width="772">
+                        <i:Interaction.Triggers>
+                            <i:EventTrigger EventName="MouseUp">
+                                <i:InvokeCommandAction Command="{Binding CanvasAction}" />
+                            </i:EventTrigger>
+                        </i:Interaction.Triggers>
+                        <i:Interaction.Behaviors>
+                            <local:MouseBehaviour MouseX="{Binding MouseX, Mode=OneWayToSource}" MouseY="{Binding MouseY, Mode=OneWayToSource}"/>
+                        </i:Interaction.Behaviors>
+                    </Canvas>
                 </ItemsPanelTemplate>
             </ItemsControl.ItemsPanel>
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
-                    <Canvas Width="25" Height="25">
+                    <Canvas Width="25" Height="25" Background="Blue">
                         <Ellipse Fill="Red" Width="25" Height="25"/>
                         <TextBlock Text="{Binding Node}"></TextBlock>
                     </Canvas>
