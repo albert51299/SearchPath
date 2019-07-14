@@ -9,32 +9,38 @@ using System.Windows.Shapes;
 
 namespace MVVM {
     class AppViewModel {
-        private RelayCommand canvasMouseUpCommand;
-        public RelayCommand CanvasMouseUpCommand {
-            get {
-                return canvasMouseUpCommand ??
-                    (canvasMouseUpCommand = new RelayCommand(obj => {
-                        MainWindow mainWindow = obj as MainWindow;
-                        
-                    }));
-            }
-        }
-
-        public ObservableCollection<Circle> Circles { get; set; }
+        public ObservableCollection<NodeVM> Nodes { get; set; }
 
         public AppViewModel() {
-            Circles = new ObservableCollection<Circle> {
-                new Circle(),
-                new Circle(),
-                new Circle()
+            Nodes = new ObservableCollection<NodeVM> {
+                new NodeVM("A"),
+                new NodeVM("B"),
+                new NodeVM("C")
             };
-            Circles[0].X = 20.0;
-            Circles[0].Y = 20.0;
-            Circles[1].X = 50.0;
-            Circles[1].Y = 50.0;
-            Circles[2].X = 80.0;
-            Circles[2].Y = 80.0;
-            Circles[2].Name = "AAA";
+        }
+    }
+
+    class NodeVM {
+        public string Node { get; set; }
+        public double X { get; set; }
+        public double Y { get; set; }
+        public bool Selected { get; set; }
+
+        public NodeVM(string node) {
+            Node = node;
+        }
+    }
+
+    class EdgeVM {
+        public int Cost { get; set; }
+        public double X1 { get; set; }
+        public double Y1 { get; set; }
+        public double X2 { get; set; }
+        public double Y2 { get; set; }
+        public bool Selected { get; set; }
+
+        public EdgeVM(int cost) {
+            Cost = cost;
         }
     }
 }

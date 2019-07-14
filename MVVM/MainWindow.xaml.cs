@@ -18,19 +18,9 @@ namespace MVVM {
     /// Interaction logic for MainWindow.xaml
     /// </summary>
     public partial class MainWindow : Window {
-        public Point MouseDownPoint { get; set; }
-        public Point MouseUpPoint { get; set; }
         public MainWindow() {
             InitializeComponent();
             DataContext = new AppViewModel();
-        }
-
-        private void MainCanvas_MouseDown(object sender, MouseButtonEventArgs e) {
-            //MouseDownPoint = e.GetPosition(mainCanvas);
-        }
-
-        private void MainCanvas_MouseUp(object sender, MouseButtonEventArgs e) {
-            //MouseUpPoint = e.GetPosition(mainCanvas);
         }
     }
 }

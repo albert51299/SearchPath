@@ -41,7 +41,29 @@
         <Button Name="btnClear" Content="Clear" HorizontalAlignment="Left" Margin="627,8,0,0" VerticalAlignment="Top" Width="75"/>
         <Button Name="btnSearch" Content="Search path" HorizontalAlignment="Left" Margin="707,8,0,0" VerticalAlignment="Top" Width="75"/>
 
-        <ItemsControl ItemsSource="{Binding Circles}">
+        <ItemsControl ItemsSource="{Binding Nodes}">
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <Canvas Background="White" Width="500" Height="500"  />
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <Canvas Width="25" Height="25">
+                        <Ellipse Fill="Green" Width="25" Height="25"/>
+                        <TextBlock Text="{Binding Node}"></TextBlock>
+                    </Canvas>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+            <ItemsControl.ItemContainerStyle>
+                <Style>
+                    <Setter Property="Canvas.Top" Value="{Binding X}" />
+                    <Setter Property="Canvas.Left" Value="{Binding Y}" />
+                </Style>
+            </ItemsControl.ItemContainerStyle>
+        </ItemsControl>
+
+        <!--<ItemsControl ItemsSource="{Binding Edges}">
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
                     <Canvas Background="White" Width="500" Height="500"  />
@@ -61,8 +83,8 @@
                     <Setter Property="Canvas.Left" Value="{Binding y}" />
                 </Style>
             </ItemsControl.ItemContainerStyle>
-        </ItemsControl>
-
+        </ItemsControl>-->
+        
         <!--<Canvas Name="mainCanvas" MouseDown="MainCanvas_MouseDown" MouseUp="MainCanvas_MouseUp" Background="White" HorizontalAlignment="Left" Height="375" Margin="10,35,0,0" VerticalAlignment="Top" Width="772">
             <i:Interaction.Triggers>
                 <i:EventTrigger EventName="MouseUp">
