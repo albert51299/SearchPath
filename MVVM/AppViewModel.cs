@@ -9,7 +9,8 @@ using System.Windows.Shapes;
 
 namespace MVVM {
     class AppViewModel {
-        public ObservableCollection<NodeVM> NodesVM { get; set; }
+        Graph graph = new Graph();
+        public ObservableCollection<NodeVM> NodesVM { get; set; } = new ObservableCollection<NodeVM>();
         public bool AllowNode { get; set; }
         public bool AllowEdge { get; set; }
         public bool AllowSelect { get; set; }
@@ -19,31 +20,33 @@ namespace MVVM {
         public RelayCommand CanvasAction {
             get {
                 return canvasAction ?? (canvasAction = new RelayCommand(obj => {
-                    // some actions
-                    //bool val = AllowNode;
-                    //bool val1 = AllowEdge;
-                    //bool val2 = AllowSelect;
+                    if (AllowNode) {
+                        Node newNode = new Node();
+                        graph.AddNode(newNode);
+                        NodesVM.Add(new NodeVM(newNode.Name, MouseX, MouseY));
+                    }
+                    if (AllowEdge) {
+
+                    }
+                    if (AllowSelect) {
+
+                    }
                 }));
             }
-        }
-
-        public AppViewModel() {
-            NodesVM = new ObservableCollection<NodeVM> {
-                new NodeVM("A"),
-                new NodeVM("B"),
-                new NodeVM("C")
-            };
         }
     }
 
     class NodeVM {
+        public double CircleDiameter { get; set; } = 25.0; // can VM know about this?
         public string Node { get; set; }
         public double X { get; set; }
         public double Y { get; set; }
         public bool Selected { get; set; }
 
-        public NodeVM(string node) {
+        public NodeVM(string node, double x, double y) {
             Node = node;
+            X = x;
+            Y = y;
         }
     }
 

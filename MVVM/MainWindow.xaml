@@ -41,7 +41,7 @@
         <Button Name="btnClear" Content="Clear" HorizontalAlignment="Left" Margin="627,8,0,0" VerticalAlignment="Top" Width="75"/>
         <Button Name="btnSearch" Content="Search path" HorizontalAlignment="Left" Margin="707,8,0,0" VerticalAlignment="Top" Width="75"/>
 
-        <ItemsControl ItemsSource="{Binding NodesVM}">
+        <ItemsControl ItemsSource="{Binding NodesVM}" Name="itemsControl">
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
                     <Canvas Background="Blue" HorizontalAlignment="Left" Height="375" Margin="10,35,0,0" VerticalAlignment="Top" Width="772">
@@ -58,16 +58,18 @@
             </ItemsControl.ItemsPanel>
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
-                    <Canvas Width="25" Height="25" Background="Blue">
-                        <Ellipse Fill="Red" Width="25" Height="25"/>
+                    <Canvas Width="{Binding CircleDiameter}" Height="{Binding CircleDiameter}" Background="Transparent">
+                        <Ellipse Width="{Binding CircleDiameter}" Height="{Binding CircleDiameter}" Fill="Red"/>
+                    <!--<Canvas Width="25" Height="25" Background="Transparent">
+                        <Ellipse Width="25" Height="25" Fill="Red"/>-->
                         <TextBlock Text="{Binding Node}"></TextBlock>
                     </Canvas>
                 </DataTemplate>
             </ItemsControl.ItemTemplate>
             <ItemsControl.ItemContainerStyle>
                 <Style>
-                    <Setter Property="Canvas.Top" Value="{Binding X}" />
-                    <Setter Property="Canvas.Left" Value="{Binding Y}" />
+                    <Setter Property="Canvas.Left" Value="{Binding X}" />
+                    <Setter Property="Canvas.Top" Value="{Binding Y}" />
                 </Style>
             </ItemsControl.ItemContainerStyle>
         </ItemsControl>
