@@ -19,9 +19,8 @@ namespace MVVM {
     /// </summary>
     public partial class MainWindow : Window {
         public MainWindow() {
-            DataContext = new AppViewModel();
             InitializeComponent();
-
+            DataContext = new AppViewModel();
         }
     }
 

@@ -41,7 +41,7 @@
         <Button Name="btnClear" Content="Clear" HorizontalAlignment="Left" Margin="627,8,0,0" VerticalAlignment="Top" Width="75"/>
         <Button Name="btnSearch" Content="Search path" HorizontalAlignment="Left" Margin="707,8,0,0" VerticalAlignment="Top" Width="75"/>
 
-        <ItemsControl ItemsSource="{Binding NodesVM}" Name="itemsControl">
+        <ItemsControl ItemsSource="{Binding NodesVM}">
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
                     <Canvas Background="Blue" HorizontalAlignment="Left" Height="375" Margin="10,35,0,0" VerticalAlignment="Top" Width="772">
