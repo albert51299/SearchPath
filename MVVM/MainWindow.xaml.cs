@@ -18,13 +18,24 @@ namespace MVVM {
     /// Interaction logic for MainWindow.xaml
     /// </summary>
     public partial class MainWindow : Window {
+        private double nodeSize = 25;
         public MainWindow() {
+            Resources.Add("NodeSize", nodeSize);
             InitializeComponent();
             DataContext = new AppViewModel();
         }
     }
 
-    public class MouseBehaviour : System.Windows.Interactivity.Behavior<FrameworkElement> {
+    public class MouseButtonEventArgsToPointConverter :  {
+        public object Convert(object value, object parameter) {
+            var args = (MouseEventArgs)value;
+            var element = (FrameworkElement)parameter;
+            var point = args.GetPosition(element);
+            return point;
+        }
+    }
+
+    /*public class MouseBehaviour : System.Windows.Interactivity.Behavior<FrameworkElement> {
         public static readonly DependencyProperty MouseYProperty = DependencyProperty.Register(
             "MouseY", typeof(double), typeof(MouseBehaviour), new PropertyMetadata(default(double)));
 
@@ -54,5 +65,5 @@ namespace MVVM {
         protected override void OnDetaching() {
             AssociatedObject.MouseMove -= AssociatedObjectOnMouseMove;
         }
-    }
+    }*/
 }

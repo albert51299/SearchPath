@@ -50,18 +50,18 @@
                                 <i:InvokeCommandAction Command="{Binding CanvasAction}" />
                             </i:EventTrigger>
                         </i:Interaction.Triggers>
-                        <i:Interaction.Behaviors>
+                        <!--<i:Interaction.Behaviors>
                             <local:MouseBehaviour MouseX="{Binding MouseX, Mode=OneWayToSource}" MouseY="{Binding MouseY, Mode=OneWayToSource}"/>
-                        </i:Interaction.Behaviors>
+                        </i:Interaction.Behaviors>-->
                     </Canvas>
                 </ItemsPanelTemplate>
             </ItemsControl.ItemsPanel>
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
-                    <Canvas Width="{Binding CircleDiameter}" Height="{Binding CircleDiameter}" Background="Transparent">
-                        <Ellipse Width="{Binding CircleDiameter}" Height="{Binding CircleDiameter}" Fill="Red"/>
-                    <!--<Canvas Width="25" Height="25" Background="Transparent">
-                        <Ellipse Width="25" Height="25" Fill="Red"/>-->
+                    <!--<Canvas Width="{Binding CircleDiameter}" Height="{Binding CircleDiameter}" Background="Transparent">
+                        <Ellipse Width="{Binding CircleDiameter}" Height="{Binding CircleDiameter}" Fill="Red"/>-->
+                    <Canvas Width="{StaticResource NodeSize}" Height="{StaticResource NodeSize}" Background="Transparent">
+                        <Ellipse Width="{StaticResource NodeSize}" Height="{StaticResource NodeSize}" Fill="Red"/>
                         <TextBlock Text="{Binding Node}"></TextBlock>
                     </Canvas>
                 </DataTemplate>
