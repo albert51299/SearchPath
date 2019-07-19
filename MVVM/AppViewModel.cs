@@ -11,9 +11,12 @@ namespace MVVM {
     class AppViewModel {
         Graph graph = new Graph();
         public ObservableCollection<NodeVM> NodesVM { get; set; } = new ObservableCollection<NodeVM>();
+        public ObservableCollection<EdgeVM> EdgesVM { get; set; } = new ObservableCollection<EdgeVM>();
         public bool AllowNode { get; set; }
         public bool AllowEdge { get; set; }
         public bool AllowSelect { get; set; }
+        public EdgeVM SelectedEdge { get; set; }
+        public NodeVM FirstNode { get; set; }
         public double MouseX { get; set; }
         public double MouseY { get; set; }
         private RelayCommand canvasMouseMove;
@@ -36,10 +39,29 @@ namespace MVVM {
                         graph.AddNode(newNode);
                         NodesVM.Add(new NodeVM(newNode.Name, MouseX, MouseY));
                     }
-                    if (AllowEdge) {
+                }));
+            }
+        }
 
+        private RelayCommand nodeMouseDown;
+        public RelayCommand NodeMouseDown {
+            get {
+                return nodeMouseDown ?? (nodeMouseDown = new RelayCommand(obj => {
+                    if (AllowEdge) {
+                        string nodeName = obj as string;
+                        FirstNode = NodesVM.FirstOrDefault(o => o.Node == nodeName);
                     }
-                    if (AllowSelect) {
+                }));
+            }
+        }
+
+        private RelayCommand nodeMouseUp;
+        public RelayCommand NodeMouseUp {
+            get {
+                return nodeMouseUp ?? (nodeMouseUp = new RelayCommand(obj => {
+                    if (AllowEdge) {
+                        string nodeName = obj as string;
+                        NodeVM secondNode = NodesVM.FirstOrDefault(o => o.Node == nodeName);
                         
                     }
                 }));
@@ -66,10 +88,19 @@ namespace MVVM {
         public double Y1 { get; set; }
         public double X2 { get; set; }
         public double Y2 { get; set; }
-        public bool Selected { get; set; }
+        public double X { get; set; }
+        public double Y { get; set; }
 
-        public EdgeVM(int cost) {
+        public EdgeVM(int cost, double x1, double y1, double x2, double y2) {
+            double widthForRectangle = 25;
+            double heightForRectangle = 15;
             Cost = cost;
+            X1 = x1;
+            Y1 = y1;
+            X2 = x2;
+            Y2 = y2;
+            X = (x1 + x2) / 2 - widthForRectangle / 2 + widthForRectangle / 5;
+            Y = (y1 + y2) / 2 - heightForRectangle / 2;
         }
     }
 }

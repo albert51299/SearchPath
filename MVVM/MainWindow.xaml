@@ -66,7 +66,19 @@
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
                     <Canvas Width="25" Height="25" Background="Transparent">
-                        <Ellipse Width="25" Height="25" Fill="Red"/>
+                        <Ellipse Width="25" Height="25" Fill="Red">
+
+                            <i:Interaction.Triggers>
+                                <i:EventTrigger EventName="MouseDown">
+                                    <i:InvokeCommandAction Command="{Binding NodeMouseDown}" CommandParameter="{Binding Node}"/>
+                                </i:EventTrigger>
+
+                                <i:EventTrigger EventName="MouseUp">
+                                    <i:InvokeCommandAction Command="{Binding NodeMouseUp}" CommandParameter="{Binding Node}"/>
+                                </i:EventTrigger>
+                            </i:Interaction.Triggers>
+                            
+                        </Ellipse>
                         <TextBlock Text="{Binding Node}" Margin="3 2 0 0"></TextBlock>
                     </Canvas>
                 </DataTemplate>
@@ -79,28 +91,22 @@
             </ItemsControl.ItemContainerStyle>
         </ItemsControl>
 
-        <!--<ItemsControl ItemsSource="{Binding Edges}">
+        <ItemsControl ItemsSource="{Binding EdgesVM}">
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
-                    <Canvas Background="White" Width="500" Height="500"  />
+                    <Canvas Background="Transparent" Width="772" Height="375"  />
                 </ItemsPanelTemplate>
             </ItemsControl.ItemsPanel>
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
-                    <Canvas Width="25" Height="25">
-                        <Ellipse Fill="Green" Width="25" Height="25"/>
-                        <TextBlock Text="{Binding node}"></TextBlock>
+                    <Canvas Background="Transparent" Width="772" Height="375">
+                        <Line X1="{Binding X1}" Y1="{Binding Y1}" X2="{Binding X2}" Y2="{Binding Y2}"/>
+                        <TextBlock Canvas.Left="{Binding X}" Canvas.Top="{Binding Y}" Text="{Binding Cost}"></TextBlock>
                     </Canvas>
                 </DataTemplate>
             </ItemsControl.ItemTemplate>
-            <ItemsControl.ItemContainerStyle>
-                <Style>
-                    <Setter Property="Canvas.Top" Value="{Binding x}" />
-                    <Setter Property="Canvas.Left" Value="{Binding y}" />
-                </Style>
-            </ItemsControl.ItemContainerStyle>
-        </ItemsControl>-->
-        
+        </ItemsControl>
+
         <!--<Canvas Name="mainCanvas" MouseDown="MainCanvas_MouseDown" MouseUp="MainCanvas_MouseUp" Background="White" HorizontalAlignment="Left" Height="375" Margin="10,35,0,0" VerticalAlignment="Top" Width="772">
             <i:Interaction.Triggers>
                 <i:EventTrigger EventName="MouseUp">
