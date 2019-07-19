@@ -16,10 +16,21 @@ namespace MVVM {
         public bool AllowSelect { get; set; }
         public double MouseX { get; set; }
         public double MouseY { get; set; }
-        private RelayCommand canvasAction;
-        public RelayCommand CanvasAction {
+        private RelayCommand canvasMouseMove;
+        public RelayCommand CanvasMouseMove {
             get {
-                return canvasAction ?? (canvasAction = new RelayCommand(obj => {
+                return canvasMouseMove ?? (canvasMouseMove = new RelayCommand(obj => {
+                    Point point = (Point)obj;
+                    MouseX = point.X;
+                    MouseY = point.Y;
+                }));
+            }
+        }
+
+        private RelayCommand canvasMouseDown;
+        public RelayCommand CanvasMouseDown {
+            get {
+                return canvasMouseDown ?? (canvasMouseDown = new RelayCommand(obj => {
                     if (AllowNode) {
                         Node newNode = new Node();
                         graph.AddNode(newNode);
@@ -29,7 +40,7 @@ namespace MVVM {
 
                     }
                     if (AllowSelect) {
-
+                        
                     }
                 }));
             }
