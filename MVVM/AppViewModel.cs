@@ -48,7 +48,6 @@ namespace MVVM {
     }
 
     class NodeVM {
-        public double CircleDiameter { get; set; } = 25.0; // can VM know size of UI elements?
         public string Node { get; set; }
         public double X { get; set; }
         public double Y { get; set; }

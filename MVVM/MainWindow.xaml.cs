@@ -19,19 +19,20 @@ namespace MVVM {
     /// Interaction logic for MainWindow.xaml
     /// </summary>
     public partial class MainWindow : Window {
-        private double nodeSize = 25;
         public MainWindow() {
-            Resources.Add("NodeSize", nodeSize);
             InitializeComponent();
             DataContext = new AppViewModel();
         }
     }
 
     public class MouseButtonEventArgsToPointConverter : IEventArgsConverter {
+        private double nodeSize = 25;
         public object Convert(object value, object parameter) {
             var args = (MouseEventArgs)value;
             var element = (FrameworkElement)parameter;
             var point = args.GetPosition(element);
+            point.X -= nodeSize / 2;
+            point.Y -= nodeSize / 2;
             return point;
         }
     }

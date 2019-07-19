@@ -65,9 +65,9 @@
             </ItemsControl.ItemsPanel>
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
-                    <Canvas Width="{StaticResource NodeSize}" Height="{StaticResource NodeSize}" Background="Transparent">
-                        <Ellipse Width="{StaticResource NodeSize}" Height="{StaticResource NodeSize}" Fill="Red"/>
-                        <TextBlock Text="{Binding Node}"></TextBlock>
+                    <Canvas Width="25" Height="25" Background="Transparent">
+                        <Ellipse Width="25" Height="25" Fill="Red"/>
+                        <TextBlock Text="{Binding Node}" Margin="3 2 0 0"></TextBlock>
                     </Canvas>
                 </DataTemplate>
             </ItemsControl.ItemTemplate>
