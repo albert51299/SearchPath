@@ -2,11 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
 namespace MVVM {
-    public class RelayCommand : ICommand {
+    public class MyRelayCommand : ICommand {
         private Action<object> execute;
         private Func<object, bool> canExecute;
 
@@ -15,7 +16,7 @@ namespace MVVM {
             remove { CommandManager.RequerySuggested -= value; }
         }
 
-        public RelayCommand(Action<object> execute, Func<object, bool> canExecute = null) {
+        public MyRelayCommand(Action<object> execute, Func<object, bool> canExecute = null) {
             this.execute = execute;
             this.canExecute = canExecute;
         }
@@ -26,6 +27,41 @@ namespace MVVM {
 
         public void Execute(object parameter) {
             this.execute(parameter);
+        }
+    }
+
+    public class RelayCommand<T> : ICommand {
+        private Predicate<T> _canExecute;
+        private Action<T> _execute;
+
+        public RelayCommand(Action<T> execute, Predicate<T> canExecute = null) {
+            _execute = execute;
+            _canExecute = canExecute;
+        }
+
+        private void Execute(T parameter) {
+            _execute(parameter);
+        }
+
+        private bool CanExecute(T parameter) {
+            return _canExecute == null ? true : _canExecute(parameter);
+        }
+
+        public bool CanExecute(object parameter) {
+            return parameter == null ? false : CanExecute((T)parameter);
+        }
+
+        public void Execute(object parameter) {
+            _execute((T)parameter);
+        }
+
+        public event EventHandler CanExecuteChanged;
+
+        public void RaiseCanExecuteChanged() {
+            var temp = Volatile.Read(ref CanExecuteChanged);
+
+            if (temp != null)
+                temp(this, new EventArgs());
         }
     }
 }

@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Input;
 using System.Windows.Shapes;
 
 namespace MVVM {
@@ -16,13 +17,15 @@ namespace MVVM {
         public bool AllowEdge { get; set; }
         public bool AllowSelect { get; set; }
         public EdgeVM SelectedEdge { get; set; }
-        public NodeVM FirstNode { get; set; }
+        public Node FirstNode { get; set; }
+        public double FirstX { get; set; }
+        public double FirstY { get; set; }
         public double MouseX { get; set; }
         public double MouseY { get; set; }
-        private RelayCommand canvasMouseMove;
-        public RelayCommand CanvasMouseMove {
+        private MyRelayCommand canvasMouseMove;
+        public MyRelayCommand CanvasMouseMove {
             get {
-                return canvasMouseMove ?? (canvasMouseMove = new RelayCommand(obj => {
+                return canvasMouseMove ?? (canvasMouseMove = new MyRelayCommand(obj => {
                     Point point = (Point)obj;
                     MouseX = point.X;
                     MouseY = point.Y;
@@ -30,10 +33,10 @@ namespace MVVM {
             }
         }
 
-        private RelayCommand canvasMouseDown;
-        public RelayCommand CanvasMouseDown {
+        private MyRelayCommand canvasMouseDown;
+        public MyRelayCommand CanvasMouseDown {
             get {
-                return canvasMouseDown ?? (canvasMouseDown = new RelayCommand(obj => {
+                return canvasMouseDown ?? (canvasMouseDown = new MyRelayCommand(obj => {
                     if (AllowNode) {
                         Node newNode = new Node();
                         graph.AddNode(newNode);
@@ -43,26 +46,29 @@ namespace MVVM {
             }
         }
 
-        private RelayCommand nodeMouseDown;
-        public RelayCommand NodeMouseDown {
+        private RelayCommand<NodeVM> nodeMouseDown;
+        public ICommand NodeMouseDown {
             get {
-                return nodeMouseDown ?? (nodeMouseDown = new RelayCommand(obj => {
+                return nodeMouseDown ?? (nodeMouseDown = new RelayCommand<NodeVM>(obj => {
                     if (AllowEdge) {
-                        string nodeName = obj as string;
-                        FirstNode = NodesVM.FirstOrDefault(o => o.Node == nodeName);
+                        FirstNode = graph.Nodes.FirstOrDefault(o => o.Name == obj.Node);
+                        FirstX = MouseX;
+                        FirstY = MouseY;
                     }
                 }));
             }
         }
 
-        private RelayCommand nodeMouseUp;
-        public RelayCommand NodeMouseUp {
+        private RelayCommand<NodeVM> nodeMouseUp;
+        public ICommand NodeMouseUp {
             get {
-                return nodeMouseUp ?? (nodeMouseUp = new RelayCommand(obj => {
+                return nodeMouseUp ?? (nodeMouseUp = new RelayCommand<NodeVM>(obj => {
                     if (AllowEdge) {
-                        string nodeName = obj as string;
-                        NodeVM secondNode = NodesVM.FirstOrDefault(o => o.Node == nodeName);
-                        
+                        Node secondNode = graph.Nodes.FirstOrDefault(o => o.Name == obj.Node);
+                        Edge edge = new Edge(FirstNode, secondNode);
+                        graph.AddEdge(edge);
+                        EdgeVM edgeVM = new EdgeVM(edge.Cost, FirstX, FirstY, MouseX, MouseY);
+                        EdgesVM.Add(edgeVM);
                     }
                 }));
             }

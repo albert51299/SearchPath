@@ -32,21 +32,37 @@
     <Grid>
         <GridSplitter HorizontalAlignment="Left" Height="0" Margin="0,30,0,0" VerticalAlignment="Top" Width="792" RenderTransformOrigin="0.185,-10.077"/>
         <RadioButton IsChecked="{Binding AllowNode}" Name="rbNode" Template="{StaticResource radio}" Width="50" Height="20" HorizontalAlignment="Left" VerticalAlignment="Top" RenderTransformOrigin="3.634,9.688" Margin="10,10,0,0">
-            <Image Source="Images/ImageForNode1.png" />
+            <Image Source="/Resources/ImageForNode1.png" />
         </RadioButton>
         <RadioButton IsChecked="{Binding AllowEdge}" Name="rbEdge" Template="{StaticResource radio}" Width="45" Height="20" HorizontalAlignment="Left" Margin="62,10,0,0" VerticalAlignment="Top">
-            <Image Source="Images/Edge.png"/>
+            <Image Source="/Resources/Edge.png"/>
         </RadioButton>
         <RadioButton IsChecked="{Binding AllowSelect}" Name="rbSelect" Template="{StaticResource radio}" Width="60" Height="20" HorizontalAlignment="Left" Margin="109,10,0,0" VerticalAlignment="Top">
-            <Image Source="Images/Select.png"/>
+            <Image Source="/Resources/Select.png"/>
         </RadioButton>
         <Button Name="btnClear" Content="Clear" HorizontalAlignment="Left" Margin="627,8,0,0" VerticalAlignment="Top" Width="75"/>
         <Button Name="btnSearch" Content="Search path" HorizontalAlignment="Left" Margin="707,8,0,0" VerticalAlignment="Top" Width="75"/>
 
+        <ItemsControl ItemsSource="{Binding EdgesVM}">
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <Canvas Background="Transparent" Width="764" Margin="0,40,0,11"  />
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <Canvas Background="Transparent" Width="772" Height="370">
+                        <Line X1="{Binding X1}" Y1="{Binding Y1}" X2="{Binding X2}" Y2="{Binding Y2}"/>
+                        <TextBlock Canvas.Left="{Binding X}" Canvas.Top="{Binding Y}" Text="{Binding Cost}"></TextBlock>
+                    </Canvas>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
+
         <ItemsControl ItemsSource="{Binding NodesVM}">
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
-                    <Canvas Name="canvas1" Background="Blue" HorizontalAlignment="Left" Height="375" Margin="10,35,0,0" VerticalAlignment="Top" Width="772">
+                    <Canvas Name="canvas1" Background="Blue" HorizontalAlignment="Left" Height="370" Margin="10,40,0,0" VerticalAlignment="Top" Width="772">
                         <i:Interaction.Triggers>
                             <i:EventTrigger EventName="MouseUp">
                                 <i:InvokeCommandAction Command="{Binding CanvasMouseDown}" />
@@ -70,14 +86,18 @@
 
                             <i:Interaction.Triggers>
                                 <i:EventTrigger EventName="MouseDown">
-                                    <i:InvokeCommandAction Command="{Binding NodeMouseDown}" CommandParameter="{Binding Node}"/>
+                                    <i:InvokeCommandAction 
+                                        Command="{Binding Path=DataContext.NodeMouseDown, RelativeSource={RelativeSource AncestorType=ItemsControl}}" 
+                                        CommandParameter="{Binding}"/>
                                 </i:EventTrigger>
 
                                 <i:EventTrigger EventName="MouseUp">
-                                    <i:InvokeCommandAction Command="{Binding NodeMouseUp}" CommandParameter="{Binding Node}"/>
+                                    <i:InvokeCommandAction 
+                                        Command="{Binding Path=DataContext.NodeMouseUp, RelativeSource={RelativeSource AncestorType=ItemsControl}}" 
+                                        CommandParameter="{Binding}"/>
                                 </i:EventTrigger>
                             </i:Interaction.Triggers>
-                            
+
                         </Ellipse>
                         <TextBlock Text="{Binding Node}" Margin="3 2 0 0"></TextBlock>
                     </Canvas>
@@ -91,22 +111,6 @@
             </ItemsControl.ItemContainerStyle>
         </ItemsControl>
 
-        <ItemsControl ItemsSource="{Binding EdgesVM}">
-            <ItemsControl.ItemsPanel>
-                <ItemsPanelTemplate>
-                    <Canvas Background="Transparent" Width="772" Height="375"  />
-                </ItemsPanelTemplate>
-            </ItemsControl.ItemsPanel>
-            <ItemsControl.ItemTemplate>
-                <DataTemplate>
-                    <Canvas Background="Transparent" Width="772" Height="375">
-                        <Line X1="{Binding X1}" Y1="{Binding Y1}" X2="{Binding X2}" Y2="{Binding Y2}"/>
-                        <TextBlock Canvas.Left="{Binding X}" Canvas.Top="{Binding Y}" Text="{Binding Cost}"></TextBlock>
-                    </Canvas>
-                </DataTemplate>
-            </ItemsControl.ItemTemplate>
-        </ItemsControl>
-
         <!--<Canvas Name="mainCanvas" MouseDown="MainCanvas_MouseDown" MouseUp="MainCanvas_MouseUp" Background="White" HorizontalAlignment="Left" Height="375" Margin="10,35,0,0" VerticalAlignment="Top" Width="772">
             <i:Interaction.Triggers>
                 <i:EventTrigger EventName="MouseUp">
@@ -114,7 +118,7 @@
                 </i:EventTrigger>
             </i:Interaction.Triggers>
         </Canvas>-->
-        
+
         <TextBox IsEnabled="False" Name ="tbCost" HorizontalAlignment="Left" Height="22" Margin="592,8,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="30"/>
         <TextBlock Height="22" Width="180" Text="Enter cost for selected edge here:" HorizontalAlignment="Left" Margin="412,8,0,0" TextWrapping="Wrap" VerticalAlignment="Top"/>
     </Grid>
