@@ -73,6 +73,11 @@ namespace MVVM {
                 }));
             }
         }
+
+        public AppViewModel() {
+            EdgeVM edgeVM = new EdgeVM(10, 5, 5, 100, 100);
+            EdgesVM.Add(edgeVM);
+        }
     }
 
     class NodeVM {
