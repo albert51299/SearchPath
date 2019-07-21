@@ -26,7 +26,7 @@ namespace MVVM {
     }
 
     public class MouseButtonEventArgsToPointConverter : IEventArgsConverter {
-        private double nodeSize = 25;
+        private double nodeSize = 30;
         public object Convert(object value, object parameter) {
             var args = (MouseEventArgs)value;
             var element = (FrameworkElement)parameter;

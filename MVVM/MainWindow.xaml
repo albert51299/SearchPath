@@ -71,8 +71,12 @@
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
                         <Canvas Background="Transparent" >
-                            <Line Stroke="Green" X1="{Binding X1}" Y1="{Binding Y1}" X2="{Binding X2}" Y2="{Binding Y2}"/>
-                            <TextBlock Canvas.Left="{Binding X}" Canvas.Top="{Binding Y}" Text="{Binding Cost}"></TextBlock>
+                            <Line Stroke="Green" 
+                                  X1="{Binding X1}" Y1="{Binding Y1}" X2="{Binding X2}" Y2="{Binding Y2}"/>
+                            <Border Background="White" BorderThickness="1" BorderBrush="Black" Width="25" Height="20"
+                                    Canvas.Left="{Binding X}" Canvas.Top="{Binding Y}">
+                                <TextBlock HorizontalAlignment="Center" Text="{Binding Cost}"></TextBlock>
+                            </Border>
                         </Canvas>
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
@@ -90,7 +94,7 @@
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
                         <Canvas Background="Transparent">
-                            <Ellipse Width="25" Height="25" Fill="Red">
+                            <Ellipse Width="30" Height="30" Fill="Red">
 
                                 <i:Interaction.Triggers>
                                     <i:EventTrigger EventName="MouseDown">
