@@ -18,7 +18,7 @@ namespace MVVM {
         public bool AllowNode { get; set; }
         public bool AllowEdge { get; set; }
         public bool AllowSelect { get; set; }
-        public EdgeVM SelectedEdge { get; set; }
+        public EdgeVM SelectedEdge { get; set; } // what is this
         public Node FirstNode { get; set; }
         public double FirstX { get; set; }
         public double FirstY { get; set; }

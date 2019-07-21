@@ -28,8 +28,19 @@ namespace MVVM
     }
 
     class Graph {
+        const int max = 2147483647;
+        const int n = 100;
+        int[,] matrix = new int[n, n];
         public List<Node> Nodes { get; set; } = new List<Node>();
         public List<Edge> Edges { get; set; } = new List<Edge>();
+
+        public Graph() {
+            for (int i = 0; i < n; i++) {
+                for (int j = 0; j < n; j++) {
+                    matrix[i, j] = -1;
+                }
+            }
+        }
 
         public void AddNode(Node node) {
             Nodes.Add(node);
@@ -43,23 +54,27 @@ namespace MVVM
             int length = 0;
             List<Node> path = new List<Node>();
 
+            int N = Nodes.Count;
+            int[,] A = new int[N, N];
 
-
-            /*if ((firstSelected != null) && (secondSelected != null)) {
-                int N = nodes.Count;
-                A = new int[N, N];
-                // filling the matrix of adjacency A usable in algorithm  
-                for (int i = 0; i < N; i++) {
-                    for (int j = 0; j < N; j++) {
-                        if ((matrix[i, j] != 0) || (i == j)) {
-                            A[i, j] = matrix[i, j];
+            // filling adjacency matrix
+            for (int i = 0; i < N; i++) {
+                for (int j = 0; j < N; j++) {
+                    if (i == j) {
+                        A[i, j] = 0;
+                    }
+                    else {
+                        if (matrix[i, j] == -1) {
+                            A[i, j] = max;
                         }
                         else {
-                            A[i, j] = max;
+                            A[i, j] = matrix[i, j];
                         }
                     }
                 }
-                Node y;
+            }
+
+            /*  Node y;
                 int[] d = new int[N];
                 bool[] isConst = new bool[N];
                 // mark all nodes besides start node as not visited and give them max weight
@@ -148,11 +163,6 @@ namespace MVVM
                 string str4 = StringReverse(str);
                 Output output = new Output(str1, str2, str3, str4);
                 output.ShowDialog();
-            }
-            else {
-                // please, select nodes
-                SelectNodes selectNodes = new SelectNodes();
-                selectNodes.ShowDialog();
             }*/
 
             return new SearchResult(length, path);
