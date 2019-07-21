@@ -37,6 +37,25 @@ namespace MVVM
 
         public void AddEdge(Edge edge) {
             Edges.Add(edge);
-        } 
+        }
+
+        public SearchResult SearchPath(Node start, Node end) {
+            int length = 0;
+            List<Node> path = new List<Node>();
+
+
+
+            return new SearchResult(length, path);
+        }
+    }
+
+    class SearchResult {
+        public int PathLength { get; }
+        public List<Node> Path { get; }
+
+        public SearchResult(int length, List<Node> path) {
+            PathLength = length;
+            Path = path;
+        }
     }
 }

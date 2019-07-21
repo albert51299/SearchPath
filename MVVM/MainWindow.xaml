@@ -40,8 +40,8 @@
         <RadioButton IsChecked="{Binding AllowSelect}" Name="rbSelect" Template="{StaticResource radio}" Width="60" Height="20" HorizontalAlignment="Left" Margin="109,10,0,0" VerticalAlignment="Top">
             <Image Source="/Resources/Select.png"/>
         </RadioButton>
-        <Button Name="btnClear" Content="Clear" HorizontalAlignment="Left" Margin="627,8,0,0" VerticalAlignment="Top" Width="75"/>
-        <Button Name="btnSearch" Content="Search path" HorizontalAlignment="Left" Margin="707,8,0,0" VerticalAlignment="Top" Width="75"/>
+        <Button Command="{Binding ClearCommand}" Content="Clear" HorizontalAlignment="Left" Margin="627,8,0,0" VerticalAlignment="Top" Width="75"/>
+        <Button Command="{Binding SearchCommand}" Content="Search path" HorizontalAlignment="Left" Margin="707,8,0,0" VerticalAlignment="Top" Width="75"/>
 
         <Canvas Name="parentCanvas" Background="Transparent" Margin="10,35,10,10">
 
@@ -81,7 +81,7 @@
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
             </ItemsControl>
-            
+
             <ItemsControl ItemsSource="{Binding NodesVM}">
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
@@ -122,7 +122,7 @@
                                         </Style.Triggers>
                                     </Style>
                                 </Ellipse.Style>
-                                
+
                             </Ellipse>
                             <TextBlock Text="{Binding Node}" Margin="5 5 0 0"></TextBlock>
                         </Canvas>
@@ -137,14 +137,7 @@
             </ItemsControl>
 
         </Canvas>
-        <!--<Canvas Name="mainCanvas" MouseDown="MainCanvas_MouseDown" MouseUp="MainCanvas_MouseUp" Background="White" HorizontalAlignment="Left" Height="375" Margin="10,35,0,0" VerticalAlignment="Top" Width="772">
-            <i:Interaction.Triggers>
-                <i:EventTrigger EventName="MouseUp">
-                    <i:InvokeCommandAction Command="{Binding CanvasMouseUpCommand}" CommandParameter="{Binding ElementName=mainWindow}"/>
-                </i:EventTrigger>
-            </i:Interaction.Triggers>
-        </Canvas>-->
-
+        
         <TextBox IsEnabled="False" Name ="tbCost" HorizontalAlignment="Left" Height="22" Margin="592,8,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="30"/>
         <TextBlock Height="22" Width="180" Text="Enter cost for selected edge here:" HorizontalAlignment="Left" Margin="412,8,0,0" TextWrapping="Wrap" VerticalAlignment="Top"/>
     </Grid>

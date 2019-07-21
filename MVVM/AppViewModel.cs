@@ -107,6 +107,25 @@ namespace MVVM {
                 }));
             }
         }
+
+        private MyRelayCommand clearCommand;
+        public MyRelayCommand ClearCommand {
+            get {
+                return clearCommand ?? (clearCommand = new MyRelayCommand(obj => {
+
+                }));
+            }
+        }
+
+        private MyRelayCommand searchCommand;
+        public MyRelayCommand SearchCommand {
+            get {
+                return searchCommand ?? (searchCommand = new MyRelayCommand(obj => {
+                    SearchResult searchResult = graph.SearchPath(firstSelected, secondSelected);
+                    // show dialog window
+                }));
+            }
+        }
     }
 
     class NodeVM : INotifyPropertyChanged {
