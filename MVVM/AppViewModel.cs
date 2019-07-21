@@ -11,15 +11,13 @@ using System.Windows.Input;
 using System.Windows.Shapes;
 
 namespace MVVM {
-    class AppViewModel {
+    class AppViewModel : INotifyPropertyChanged {
         private Graph graph = new Graph();
         public ObservableCollection<NodeVM> NodesVM { get; set; } = new ObservableCollection<NodeVM>();
         public ObservableCollection<EdgeVM> EdgesVM { get; set; } = new ObservableCollection<EdgeVM>();
         public bool AllowNode { get; set; }
         public bool AllowEdge { get; set; }
         public bool AllowSelect { get; set; }
-        private Node firstSelected;
-        private Node secondSelected;
         public EdgeVM SelectedEdge { get; set; }
         public Node FirstNode { get; set; }
         public double FirstX { get; set; }
@@ -28,6 +26,31 @@ namespace MVVM {
         public double AddNodeMouseY { get; set; }
         public double MouseX { get; set; }
         public double MouseY { get; set; }
+        private bool allowSearch;
+        public bool AllowSearch {
+            get { return allowSearch; }
+            set {
+                allowSearch = value;
+                OnPropertyChanged("AllowSearch");
+            }
+        }
+        private Node firstSelected;
+        public Node FirstSelected {
+            get { return firstSelected; }
+            set {
+                firstSelected = value;
+                UpdateAllowSearch();
+            }
+        }
+        private Node secondSelected;
+        public Node SecondSelected {
+            get { return secondSelected; }
+            set {
+                secondSelected = value;
+                UpdateAllowSearch();
+            }
+        }
+
         private MyRelayCommand canvasMouseMove;
         public MyRelayCommand CanvasMouseMove {
             get {
@@ -66,24 +89,24 @@ namespace MVVM {
                     if (AllowSelect) {
                         NodesVM.FirstOrDefault(o => o.Node == obj.Node).InvertSelected();
                         Node currentNode = graph.Nodes.FirstOrDefault(o => o.Name == obj.Node);
-                        if (currentNode == firstSelected) {
-                            firstSelected = null;
+                        if (currentNode == FirstSelected) {
+                            FirstSelected = null;
                         }
-                        else if (currentNode == secondSelected) {
-                            secondSelected = null;
+                        else if (currentNode == SecondSelected) {
+                            SecondSelected = null;
                         }
                         else {
-                            if ((firstSelected != null) && (secondSelected != null)) {
-                                NodesVM.FirstOrDefault(o => o.Node == firstSelected.Name).InvertSelected();
-                                NodesVM.FirstOrDefault(o => o.Node == secondSelected.Name).InvertSelected();
-                                firstSelected = null;
-                                secondSelected = null;
+                            if ((FirstSelected != null) && (SecondSelected != null)) {
+                                NodesVM.FirstOrDefault(o => o.Node == FirstSelected.Name).InvertSelected();
+                                NodesVM.FirstOrDefault(o => o.Node == SecondSelected.Name).InvertSelected();
+                                FirstSelected = null;
+                                SecondSelected = null;
                             }
-                            if (firstSelected == null) {
-                                firstSelected = currentNode;
+                            if (FirstSelected == null) {
+                                FirstSelected = currentNode;
                             }
                             else {
-                                secondSelected = currentNode;
+                                SecondSelected = currentNode;
                             }
                         }
                     }
@@ -121,10 +144,20 @@ namespace MVVM {
         public MyRelayCommand SearchCommand {
             get {
                 return searchCommand ?? (searchCommand = new MyRelayCommand(obj => {
-                    SearchResult searchResult = graph.SearchPath(firstSelected, secondSelected);
+                    SearchResult searchResult = graph.SearchPath(FirstSelected, SecondSelected);
                     // show dialog window
                 }));
             }
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+        public void OnPropertyChanged([CallerMemberName]string prop = "") {
+            if (PropertyChanged != null)
+                PropertyChanged(this, new PropertyChangedEventArgs(prop));
+        }
+
+        private void UpdateAllowSearch() {
+            AllowSearch = (FirstSelected != null) && (SecondSelected != null);
         }
     }
 

@@ -41,7 +41,17 @@
             <Image Source="/Resources/Select.png"/>
         </RadioButton>
         <Button Command="{Binding ClearCommand}" Content="Clear" HorizontalAlignment="Left" Margin="627,8,0,0" VerticalAlignment="Top" Width="75"/>
-        <Button Command="{Binding SearchCommand}" Content="Search path" HorizontalAlignment="Left" Margin="707,8,0,0" VerticalAlignment="Top" Width="75"/>
+        <Button Command="{Binding SearchCommand}" Content="Search path" HorizontalAlignment="Left" Margin="707,8,0,0" VerticalAlignment="Top" Width="75">
+            <Button.Style>
+                <Style TargetType="Button">
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding AllowSearch}" Value="False">
+                            <Setter  Property="IsEnabled" Value="False"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Button.Style>
+        </Button>
 
         <Canvas Name="parentCanvas" Background="Transparent" Margin="10,35,10,10">
 
