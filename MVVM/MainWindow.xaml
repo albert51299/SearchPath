@@ -71,9 +71,9 @@
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
                         <Canvas Background="Transparent" >
-                            <Line Stroke="Green" 
+                            <Line Stroke="Black" StrokeThickness="2" 
                                   X1="{Binding X1}" Y1="{Binding Y1}" X2="{Binding X2}" Y2="{Binding Y2}"/>
-                            <Border Background="White" BorderThickness="1" BorderBrush="Black" Width="25" Height="20"
+                            <Border Background="White" BorderThickness="2" BorderBrush="Black" Width="25" Height="20"
                                     Canvas.Left="{Binding X}" Canvas.Top="{Binding Y}">
                                 <TextBlock HorizontalAlignment="Center" Text="{Binding Cost}"></TextBlock>
                             </Border>
@@ -94,7 +94,7 @@
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
                         <Canvas Background="Transparent">
-                            <Ellipse Width="30" Height="30" Fill="Red">
+                            <Ellipse Stroke="Black" StrokeThickness="2" Width="30" Height="30">
 
                                 <i:Interaction.Triggers>
                                     <i:EventTrigger EventName="MouseDown">
@@ -110,8 +110,21 @@
                                     </i:EventTrigger>
                                 </i:Interaction.Triggers>
 
+                                <Ellipse.Style>
+                                    <Style TargetType="Ellipse">
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding Selected}" Value="True">
+                                                <Setter Property="Fill" Value="Red"/>
+                                            </DataTrigger>
+                                            <DataTrigger Binding="{Binding Selected}" Value="False">
+                                                <Setter Property="Fill" Value="Gray"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Ellipse.Style>
+                                
                             </Ellipse>
-                            <TextBlock Text="{Binding Node}" Margin="3 2 0 0"></TextBlock>
+                            <TextBlock Text="{Binding Node}" Margin="5 5 0 0"></TextBlock>
                         </Canvas>
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>

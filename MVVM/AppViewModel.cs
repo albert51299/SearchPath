@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -10,12 +12,14 @@ using System.Windows.Shapes;
 
 namespace MVVM {
     class AppViewModel {
-        Graph graph = new Graph();
+        private Graph graph = new Graph();
         public ObservableCollection<NodeVM> NodesVM { get; set; } = new ObservableCollection<NodeVM>();
         public ObservableCollection<EdgeVM> EdgesVM { get; set; } = new ObservableCollection<EdgeVM>();
         public bool AllowNode { get; set; }
         public bool AllowEdge { get; set; }
         public bool AllowSelect { get; set; }
+        private Node firstSelected;
+        private Node secondSelected;
         public EdgeVM SelectedEdge { get; set; }
         public Node FirstNode { get; set; }
         public double FirstX { get; set; }
@@ -59,6 +63,30 @@ namespace MVVM {
                         FirstX = MouseX;
                         FirstY = MouseY;
                     }
+                    if (AllowSelect) {
+                        NodesVM.FirstOrDefault(o => o.Node == obj.Node).InvertSelected();
+                        Node currentNode = graph.Nodes.FirstOrDefault(o => o.Name == obj.Node);
+                        if (currentNode == firstSelected) {
+                            firstSelected = null;
+                        }
+                        else if (currentNode == secondSelected) {
+                            secondSelected = null;
+                        }
+                        else {
+                            if ((firstSelected != null) && (secondSelected != null)) {
+                                NodesVM.FirstOrDefault(o => o.Node == firstSelected.Name).InvertSelected();
+                                NodesVM.FirstOrDefault(o => o.Node == secondSelected.Name).InvertSelected();
+                                firstSelected = null;
+                                secondSelected = null;
+                            }
+                            if (firstSelected == null) {
+                                firstSelected = currentNode;
+                            }
+                            else {
+                                secondSelected = currentNode;
+                            }
+                        }
+                    }
                 }));
             }
         }
@@ -69,17 +97,19 @@ namespace MVVM {
                 return nodeMouseUp ?? (nodeMouseUp = new RelayCommand<NodeVM>(obj => {
                     if (AllowEdge) {
                         Node secondNode = graph.Nodes.FirstOrDefault(o => o.Name == obj.Node);
-                        Edge edge = new Edge(FirstNode, secondNode);
-                        graph.AddEdge(edge);
-                        EdgeVM edgeVM = new EdgeVM(edge.Cost, FirstX, FirstY, MouseX, MouseY);
-                        EdgesVM.Add(edgeVM);
+                        if (FirstNode != secondNode) {
+                            Edge edge = new Edge(FirstNode, secondNode);
+                            graph.AddEdge(edge);
+                            EdgeVM edgeVM = new EdgeVM(edge.Cost, FirstX, FirstY, MouseX, MouseY);
+                            EdgesVM.Add(edgeVM);
+                        }
                     }
                 }));
             }
         }
     }
 
-    class NodeVM {
+    class NodeVM : INotifyPropertyChanged {
         public string Node { get; set; }
         public double X { get; set; }
         public double Y { get; set; }
@@ -89,6 +119,17 @@ namespace MVVM {
             Node = node;
             X = x;
             Y = y;
+        }
+
+        public void InvertSelected() {
+            Selected = !Selected;
+            OnPropertyChanged("Selected");
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+        public void OnPropertyChanged([CallerMemberName]string prop = "") {
+            if (PropertyChanged != null)
+                PropertyChanged(this, new PropertyChangedEventArgs(prop));
         }
     }
 
