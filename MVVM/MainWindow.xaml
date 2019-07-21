@@ -43,11 +43,10 @@
         <Button Name="btnClear" Content="Clear" HorizontalAlignment="Left" Margin="627,8,0,0" VerticalAlignment="Top" Width="75"/>
         <Button Name="btnSearch" Content="Search path" HorizontalAlignment="Left" Margin="707,8,0,0" VerticalAlignment="Top" Width="75"/>
 
-
-        <Canvas Name="parentCanvas" Background="Blue" Margin="10,35,10,10">
+        <Canvas Name="parentCanvas" Background="Transparent" Margin="10,35,10,10">
 
             <i:Interaction.Triggers>
-                <i:EventTrigger EventName="MouseUp">
+                <i:EventTrigger EventName="MouseDown">
                     <i:InvokeCommandAction Command="{Binding CanvasMouseDown}" />
                 </i:EventTrigger>
 
@@ -60,10 +59,10 @@
                 </i:EventTrigger>
             </i:Interaction.Triggers>
 
-            <ItemsControl ItemsSource="{Binding NodesVM}">
+            <ItemsControl ItemsSource="{Binding EdgesVM}">
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
-                        <Canvas Background="Transparent" Margin="0,0,0,0"
+                        <Canvas Background="Transparent"
                                 Width="{Binding ElementName=parentCanvas, Path=ActualWidth}" 
                                 Height="{Binding ElementName=parentCanvas, Path=ActualHeight}">
                         </Canvas>
@@ -71,7 +70,26 @@
                 </ItemsControl.ItemsPanel>
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
-                        <Canvas Width="25" Height="25" Background="Transparent">
+                        <Canvas Background="Transparent" >
+                            <Line Stroke="Green" X1="{Binding X1}" Y1="{Binding Y1}" X2="{Binding X2}" Y2="{Binding Y2}"/>
+                            <TextBlock Canvas.Left="{Binding X}" Canvas.Top="{Binding Y}" Text="{Binding Cost}"></TextBlock>
+                        </Canvas>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+            
+            <ItemsControl ItemsSource="{Binding NodesVM}">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <Canvas Background="Transparent"
+                                Width="{Binding ElementName=parentCanvas, Path=ActualWidth}" 
+                                Height="{Binding ElementName=parentCanvas, Path=ActualHeight}">
+                        </Canvas>
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Canvas Background="Transparent">
                             <Ellipse Width="25" Height="25" Fill="Red">
 
                                 <i:Interaction.Triggers>
@@ -101,24 +119,6 @@
                 </ItemsControl.ItemContainerStyle>
             </ItemsControl>
 
-            <ItemsControl ItemsSource="{Binding EdgesVM}">
-                <ItemsControl.ItemsPanel>
-                    <ItemsPanelTemplate>
-                        <Canvas Background="Transparent" Margin="0,0,0,0"
-                                Width="{Binding ElementName=parentCanvas, Path=ActualWidth}" 
-                                Height="{Binding ElementName=parentCanvas, Path=ActualHeight}">
-                        </Canvas>
-                    </ItemsPanelTemplate>
-                </ItemsControl.ItemsPanel>
-                <ItemsControl.ItemTemplate>
-                    <DataTemplate>
-                        <Canvas Background="Transparent" >
-                            <Line Stroke="Green" X1="{Binding X1}" Y1="{Binding Y1}" X2="{Binding X2}" Y2="{Binding Y2}"/>
-                            <TextBlock Canvas.Left="{Binding X}" Canvas.Top="{Binding Y}" Text="{Binding Cost}"></TextBlock>
-                        </Canvas>
-                    </DataTemplate>
-                </ItemsControl.ItemTemplate>
-            </ItemsControl>
         </Canvas>
         <!--<Canvas Name="mainCanvas" MouseDown="MainCanvas_MouseDown" MouseUp="MainCanvas_MouseUp" Background="White" HorizontalAlignment="Left" Height="375" Margin="10,35,0,0" VerticalAlignment="Top" Width="772">
             <i:Interaction.Triggers>

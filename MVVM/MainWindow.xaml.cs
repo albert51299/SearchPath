@@ -30,10 +30,11 @@ namespace MVVM {
         public object Convert(object value, object parameter) {
             var args = (MouseEventArgs)value;
             var element = (FrameworkElement)parameter;
-            var point = args.GetPosition(element);
-            point.X -= nodeSize / 2;
-            point.Y -= nodeSize / 2;
-            return point;
+            Point realPoint = args.GetPosition(element);
+            Point addNodePoint = realPoint;
+            addNodePoint.X -= nodeSize / 2;
+            addNodePoint.Y -= nodeSize / 2;
+            return new List<Point> { realPoint, addNodePoint };
         }
     }
 }

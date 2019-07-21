@@ -20,15 +20,19 @@ namespace MVVM {
         public Node FirstNode { get; set; }
         public double FirstX { get; set; }
         public double FirstY { get; set; }
+        public double AddNodeMouseX { get; set; }
+        public double AddNodeMouseY { get; set; }
         public double MouseX { get; set; }
         public double MouseY { get; set; }
         private MyRelayCommand canvasMouseMove;
         public MyRelayCommand CanvasMouseMove {
             get {
                 return canvasMouseMove ?? (canvasMouseMove = new MyRelayCommand(obj => {
-                    Point point = (Point)obj;
-                    MouseX = point.X;
-                    MouseY = point.Y;
+                    List<Point> twoPoints = obj as List<Point>;
+                    MouseX = twoPoints[0].X;
+                    MouseY = twoPoints[0].Y;
+                    AddNodeMouseX = twoPoints[1].X;
+                    AddNodeMouseY = twoPoints[1].Y;
                 }));
             }
         }
@@ -40,7 +44,7 @@ namespace MVVM {
                     if (AllowNode) {
                         Node newNode = new Node();
                         graph.AddNode(newNode);
-                        NodesVM.Add(new NodeVM(newNode.Name, MouseX, MouseY));
+                        NodesVM.Add(new NodeVM(newNode.Name, AddNodeMouseX, AddNodeMouseY));
                     }
                 }));
             }
