@@ -7,11 +7,13 @@ using System.Threading.Tasks;
 namespace MVVM
 {
     class Node {
+        public int Id { get; set; }
         public string Name { get; set; }
         private static int number;
 
         public Node() {
-            Name = (++number).ToString();
+            Id = ++number;
+            Name = Id.ToString();
         }
     }
 
@@ -51,9 +53,6 @@ namespace MVVM
         }
 
         public SearchResult SearchPath(Node start, Node end) {
-            int length = 0;
-            List<Node> path = new List<Node>();
-
             int N = Nodes.Count;
             int[,] A = new int[N, N];
 
@@ -73,98 +72,76 @@ namespace MVVM
                     }
                 }
             }
+            Node y;
+            int[] dist = new int[N];
+            bool[] visited = new bool[N];
 
-            /*  Node y;
-                int[] d = new int[N];
-                bool[] isConst = new bool[N];
-                // mark all nodes besides start node as not visited and give them max weight
-                for (int i = 0; i < N; i++) {
-                    d[i] = max;
-                    isConst[i] = false;
+            // mark all nodes as not visited and give them max weight
+            for (int i = 0; i < N; i++) {
+                dist[i] = max;
+                visited[i] = false;
+            }
+            dist[start.Id] = 0;
+            visited[start.Id] = true;
+            y = start;
+
+            while (y != end) {
+                // updating marks
+                for (int i = 0; i < N; i++) { 
+                    if ((A[i, y.Id] != max) && (A[i, y.Id] != 0) && (visited[i] == false)) {
+                        int dx = dist[i];
+                        int sum = dist[y.Id] + A[i, y.Id];
+                        if (sum < dx) {
+                            dist[i] = sum;
+                        }
+                    }
                 }
-                // algorithm of Dijkstra
-                d[firstSelected.GetIndex()] = 0;
-                isConst[firstSelected.GetIndex()] = true;
-                y = firstSelected;
-                while (y != secondSelected) { // O(N)
-                    // updating of the marks
-                    for (int i = 0; i < N; i++) { // O(N)
-                        if ((A[i, y.GetIndex()] != max) && (A[i, y.GetIndex()] != 0) && (isConst[i] == false)) {
-                            int dx = d[i];
-                            int sum = d[y.GetIndex()] + A[i, y.GetIndex()];
-                            if (sum < dx) {
-                                d[i] = sum;
-                            }
-                        }
+                // checking exist of path
+                bool pathExist = false;
+                for (int j = 0; j < N; j++) {
+                    if ((!visited[j]) && (dist[j] != max)) {
+                        pathExist = true;
+                        break;
                     }
-                    // checking of exist of the path
-                    //
-                    // count of not marked nodes
-                    int count = 0;
-                    foreach (var el in isConst) { // O(N)
-                        if (!el) {
-                            count++;
-                        }
+                }
+                if (!pathExist) {
+                    // throw exception
+                }
+                // search node with minimum weight and make it visited
+                int min = max;
+                for (int i = 0; i < N; i++) { 
+                    if ((dist[i] < min) && (!visited[i])) {
+                        min = dist[i];
                     }
-                    // count of not marked nodes with max cost
-                    int countOfMax = 0;
-                    for (int j = 0; j < nodes.Count; j++) { // O(N)
-                        if ((d[j] == max) && (!isConst[j])) {
-                            countOfMax++;
-                        }
+                }
+                for (int i = 0; i < N; i++) {
+                    if ((min == dist[i]) && (!visited[i])) {
+                        y = Nodes[i];
+                        visited[i] = true;
+                        break;
                     }
-                    if (count == countOfMax) {
-                        NoPath noPath = new NoPath();
-                        noPath.ShowDialog();
-                        firstSelected.InvertSelected();
-                        firstSelected = null;
-                        secondSelected.InvertSelected();
-                        secondSelected = null;
-                        return;
-                    }
-                    //
-                    // search node with minimum weight and make it visited
-                    int min = max;
-                    for (int i = 0; i < N; i++) { // O(N)
-                        if ((d[i] < min) && (isConst[i] == false)) {
-                            min = d[i];
-                        }
-                    }
-                    for (int i = 0; i < N; i++) { // O(N)
-                        if ((min == d[i]) && (isConst[i] == false)) {
-                            y = nodes[i]; // O(N)
-                            isConst[i] = true;
+                }
+            }
+            int length = dist[end.Id];
+            List<Node> path = new List<Node>();
+            int distST = dist[end.Id];
+            path.Add(end);
+            Node endNode = end;
+            // restoring path
+            while (endNode != start) {
+                for (int i = 0; i < N; i++) {
+                    if (i != endNode.Id) {
+                        int distSV = dist[i];
+                        int distVT = A[i, endNode.Id];
+                        if (distSV + distVT == distST) {
+                            distST = distSV;
+                            path.Insert(0, Nodes[i]);
+                            endNode = Nodes[i];
                             break;
                         }
                     }
                 }
-                string str = secondSelected.GetName().ToString();
-                Node endNode = secondSelected;
-                int dst = d[secondSelected.GetIndex()];
-                // restoring of the path
-                while (endNode != firstSelected) {
-                    for (int i = 0; i < N; i++) {
-                        if (i != endNode.GetIndex()) {
-                            int dsv = d[i];
-                            int avt = A[i, endNode.GetIndex()];
-                            if (dsv + avt == dst) {
-                                dst = dsv;
-                                str += " " + nodes[i].GetName().ToString();
-                                endNode = nodes[i];
-                                break;
-                            }
-                        }
-                    }
-                }
-                // output data
-                string str1 = firstSelected.GetName().ToString();
-                string str2 = secondSelected.GetName().ToString();
-                string str3 = d[secondSelected.GetIndex()].ToString();
-                string str4 = StringReverse(str);
-                Output output = new Output(str1, str2, str3, str4);
-                output.ShowDialog();
-            }*/
-
+            }
             return new SearchResult(length, path);
         }
     }
