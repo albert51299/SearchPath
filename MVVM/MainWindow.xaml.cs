@@ -21,7 +21,7 @@ namespace MVVM {
     public partial class MainWindow : Window {
         public MainWindow() {
             InitializeComponent();
-            DataContext = new AppViewModel();
+            DataContext = new AppViewModel(new ShowResultDialog());
         }
     }
 

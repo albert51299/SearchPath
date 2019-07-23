@@ -26,6 +26,19 @@ namespace MVVM {
         public double AddNodeMouseY { get; set; }
         public double MouseX { get; set; }
         public double MouseY { get; set; }
+        // temp
+        public string strStartNode { get; set; }
+        public string strEndNode { get; set; }
+        public string length { get; set; }
+        public string path { get; set; }
+        //
+        public SearchResult SearchResult { get; set; }
+        public IDialogService dialogService;
+
+        public AppViewModel(IDialogService dialogService) {
+            this.dialogService = dialogService;
+        }
+
         private bool allowSearch;
         public bool AllowSearch {
             get { return allowSearch; }
@@ -144,8 +157,16 @@ namespace MVVM {
         public MyRelayCommand SearchCommand {
             get {
                 return searchCommand ?? (searchCommand = new MyRelayCommand(obj => {
-                    SearchResult searchResult = graph.SearchPath(FirstSelected, SecondSelected);
-                    // show dialog window
+                    SearchResult = graph.SearchPath(FirstSelected, SecondSelected);
+                    // temp
+                    strStartNode = firstSelected.Name;
+                    strEndNode = secondSelected.Name;
+                    length = SearchResult.PathLength.ToString();
+                    foreach (var item in SearchResult.Path) {
+                        path += item.Name + " ";
+                    }
+                    //
+                    if (dialogService.Show(this) == true) { }
                 }));
             }
         }

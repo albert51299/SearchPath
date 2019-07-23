@@ -6,18 +6,18 @@ using System.Threading.Tasks;
 
 namespace MVVM
 {
-    class Node {
+    public class Node {
         public int Id { get; set; }
         public string Name { get; set; }
         private static int number;
 
         public Node() {
-            Id = ++number;
-            Name = Id.ToString();
+            Id = number;
+            Name = (++number).ToString();
         }
     }
 
-    class Edge {
+    public class Edge {
         public int Cost { get; set; }
         public Node FirstNode { get; set; }
         public Node SecondNode { get; set; }
@@ -29,7 +29,7 @@ namespace MVVM
         }
     }
 
-    class Graph {
+    public class Graph {
         const int max = 2147483647;
         const int n = 100;
         int[,] matrix = new int[n, n];
@@ -50,6 +50,8 @@ namespace MVVM
 
         public void AddEdge(Edge edge) {
             Edges.Add(edge);
+            matrix[edge.FirstNode.Id, edge.SecondNode.Id] = edge.Cost;
+            matrix[edge.SecondNode.Id, edge.FirstNode.Id] = edge.Cost;
         }
 
         public SearchResult SearchPath(Node start, Node end) {
@@ -105,7 +107,8 @@ namespace MVVM
                     }
                 }
                 if (!pathExist) {
-                    // throw exception
+                    return new SearchResult(false, 0, new List<Node>());
+                    
                 }
                 // search node with minimum weight and make it visited
                 int min = max;
@@ -142,15 +145,17 @@ namespace MVVM
                     }
                 }
             }
-            return new SearchResult(length, path);
+            return new SearchResult(true, length, path);
         }
     }
 
-    class SearchResult {
+    public class SearchResult {
+        public bool PathExist { get; set; }
         public int PathLength { get; }
         public List<Node> Path { get; }
 
-        public SearchResult(int length, List<Node> path) {
+        public SearchResult(bool exist, int length, List<Node> path) {
+            PathExist = exist;
             PathLength = length;
             Path = path;
         }
