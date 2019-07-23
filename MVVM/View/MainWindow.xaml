@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:MVVM"
+        xmlns:local="clr-namespace:MVVM.Other"
         xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
         xmlns:cmd="clr-namespace:GalaSoft.MvvmLight.Command;assembly=GalaSoft.MvvmLight.Platform"
         mc:Ignorable="d"
@@ -80,12 +80,54 @@
                 </ItemsControl.ItemsPanel>
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
-                        <Canvas Background="Transparent" >
+                        <Canvas Background="Transparent">
                             <Line Stroke="Black" StrokeThickness="2" 
-                                  X1="{Binding X1}" Y1="{Binding Y1}" X2="{Binding X2}" Y2="{Binding Y2}"/>
-                            <Border Background="White" BorderThickness="2" BorderBrush="Black" Width="25" Height="20"
+                                  X1="{Binding X1}" Y1="{Binding Y1}" X2="{Binding X2}" Y2="{Binding Y2}">
+                                <!--<Line.Style>
+                                    <Style TargetType="Line">
+                                        <Setter Property="Stroke" Value="Black"/>
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding Selected}" Value="True">
+                                                <Setter Property="Stroke" Value="Red"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Line.Style>-->
+                            </Line>
+                            <Border Background="White" BorderThickness="2" Width="25" Height="20"
                                     Canvas.Left="{Binding X}" Canvas.Top="{Binding Y}">
-                                <TextBlock HorizontalAlignment="Center" Text="{Binding Cost}"></TextBlock>
+                                <TextBlock HorizontalAlignment="Center" Text="{Binding Cost}">
+                                    
+                                    <!---->
+                                    <i:Interaction.Triggers>
+                                        <i:EventTrigger EventName="MouseDown">
+                                        <i:InvokeCommandAction 
+                                        Command="{Binding Path=DataContext.EdgeMouseDown, RelativeSource={RelativeSource AncestorType=ItemsControl}}" 
+                                        CommandParameter="{Binding}"/>
+                                    </i:EventTrigger>
+                                    </i:Interaction.Triggers>
+                                    <!---->
+
+                                    <TextBlock.Style>
+                                        <Style TargetType="TextBlock">
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding Selected}" Value="True">
+                                                    <Setter Property="Foreground" Value="Red"/>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </TextBlock.Style>
+                                </TextBlock>
+                                <Border.Style>
+                                    <Style TargetType="Border">
+                                        <Setter Property="BorderBrush" Value="Black"/>
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding Selected}" Value="True">
+                                                <Setter Property="BorderBrush" Value="Red"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Border.Style>
                             </Border>
                         </Canvas>
                     </DataTemplate>
@@ -145,31 +187,11 @@
                     </Style>
                 </ItemsControl.ItemContainerStyle>
             </ItemsControl>
-
+            
         </Canvas>
         
-        <TextBox IsEnabled="False" Name ="tbCost" HorizontalAlignment="Left" Height="22" Margin="592,8,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="30"/>
+        <TextBox IsEnabled="{Binding ChangingCost}" HorizontalAlignment="Left" Height="22" Margin="592,8,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="30"/>
         <TextBlock Height="22" Width="180" Text="Enter cost for selected edge here:" HorizontalAlignment="Left" Margin="412,8,0,0" TextWrapping="Wrap" VerticalAlignment="Top"/>
     </Grid>
 </Window>
-
-<!--<Grid>
-    <GridSplitter HorizontalAlignment="Left" Height="0" Margin="0,30,0,0" VerticalAlignment="Top" Width="792" RenderTransformOrigin="0.185,-10.077"/>
-    <RadioButton Name="rbNode" Template="{StaticResource rbT}" Width="50" Height="20" HorizontalAlignment="Left" VerticalAlignment="Top" RenderTransformOrigin="3.634,9.688" Margin="10,10,0,0">
-        <Image Source="Images/ImageForNode1.png" />
-    </RadioButton>
-    <RadioButton Name="rbEdge" Template="{StaticResource rbT}" Width="45" Height="20" HorizontalAlignment="Left" Margin="62,10,0,0" VerticalAlignment="Top">
-        <Image Source="Images/Edge.png"/>
-    </RadioButton>
-    <RadioButton Name="rbSelect" Template="{StaticResource rbT}" Width="60" Height="20" HorizontalAlignment="Left" Margin="109,10,0,0" VerticalAlignment="Top">
-        <Image Source="Images/Select.png"/>
-    </RadioButton>
-    <Button Name="btnClear" Click="BtnClear_Click" Content="Clear" HorizontalAlignment="Left" Margin="627,8,0,0" VerticalAlignment="Top" Width="75"/>
-    <Button Name="btnSearch" Click="BtnSearch_Click" Content="Search path" HorizontalAlignment="Left" Margin="707,8,0,0" VerticalAlignment="Top" Width="75"/>
-    <Canvas Name="mainCanvas" Background="White" MouseDown="MainCanvas_MouseDown" MouseUp="MainCanvas_MouseUp" HorizontalAlignment="Left" Height="375" Margin="10,35,0,0" VerticalAlignment="Top" Width="772">
-
-    </Canvas>
-    <TextBox KeyDown="TbCost_KeyDown" IsEnabled="False" Name ="tbCost" HorizontalAlignment="Left" Height="22" Margin="592,8,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="30"/>
-    <TextBlock Height="22" Width="180" Text="Enter cost for selected edge here:" HorizontalAlignment="Left" Margin="412,8,0,0" TextWrapping="Wrap" VerticalAlignment="Top"/>
-</Grid>-->
     
