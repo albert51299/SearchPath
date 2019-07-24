@@ -60,6 +60,10 @@
                     <i:InvokeCommandAction Command="{Binding CanvasMouseDown}" />
                 </i:EventTrigger>
 
+                <i:EventTrigger EventName="MouseUp">
+                    <i:InvokeCommandAction Command="{Binding CanvasMouseUp}" />
+                </i:EventTrigger>
+                
                 <i:EventTrigger EventName="MouseMove">
                     <cmd:EventToCommand
                                     Command="{Binding CanvasMouseMove}"
@@ -83,16 +87,6 @@
                         <Canvas Background="Transparent">
                             <Line Stroke="Black" StrokeThickness="2" 
                                   X1="{Binding X1}" Y1="{Binding Y1}" X2="{Binding X2}" Y2="{Binding Y2}">
-                                <!--<Line.Style>
-                                    <Style TargetType="Line">
-                                        <Setter Property="Stroke" Value="Black"/>
-                                        <Style.Triggers>
-                                            <DataTrigger Binding="{Binding Selected}" Value="True">
-                                                <Setter Property="Stroke" Value="Red"/>
-                                            </DataTrigger>
-                                        </Style.Triggers>
-                                    </Style>
-                                </Line.Style>-->
                             </Line>
                             <Border Background="White" BorderThickness="2" Width="25" Height="20"
                                     Canvas.Left="{Binding X}" Canvas.Top="{Binding Y}">
@@ -176,11 +170,15 @@
                     </Style>
                 </ItemsControl.ItemContainerStyle>
             </ItemsControl>
-            
+
         </Canvas>
 
-        <TextBox IsEnabled="{Binding AddingEdge}" local:FocusExtension.IsFocused="{Binding AddingEdge}"  HorizontalAlignment="Left" Height="22" Margin="592,8,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="30">
-            
+        <TextBox Text="{Binding CostField}" IsEnabled="{Binding AddingEdge}" local:FocusExtension.IsFocused="{Binding AddingEdge}"  HorizontalAlignment="Left" Height="22" Margin="592,8,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="30">
+            <TextBox.InputBindings>
+                <KeyBinding Key="Enter"
+                            Command="{Binding SetEdgeCost}"
+                            CommandParameter="{Binding Path=Text, RelativeSource={RelativeSource AncestorType=TextBox}}"/>
+            </TextBox.InputBindings>
         </TextBox>
         <TextBlock Height="22" Width="180" Text="Enter cost for edge here:" HorizontalAlignment="Left" Margin="412,8,0,0" TextWrapping="Wrap" VerticalAlignment="Top"/>
     </Grid>

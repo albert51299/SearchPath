@@ -21,10 +21,13 @@ namespace MVVM
         public int Cost { get; set; } = -1;
         public Node FirstNode { get; set; }
         public Node SecondNode { get; set; }
+        public int Id { get; set; }
+        private static int number;
 
         public Edge(Node first, Node second) {
             FirstNode = first;
             SecondNode = second;
+            Id = ++number;
         }
     }
 

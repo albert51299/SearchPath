@@ -7,6 +7,7 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Shapes;
 
@@ -38,6 +39,14 @@ namespace MVVM {
             this.dialogService = dialogService;
         }
 
+        private string costField;
+        public string CostField {
+            get { return costField; }
+            set {
+                costField = value;
+                OnPropertyChanged("CostField");
+            }
+        }
         public Edge CostNotSet { get; set; }
         private bool addingEdge;
         public bool AddingEdge {
@@ -99,6 +108,17 @@ namespace MVVM {
             }
         }
 
+        private MyRelayCommand canvasMouseUp;
+        public MyRelayCommand CanvasMouseUp {
+            get {
+                return canvasMouseUp ?? (canvasMouseUp = new MyRelayCommand(obj => {
+                    if (AllowEdge) {
+                        FirstNode = null;
+                    }
+                }));
+            }
+        }
+
         private RelayCommand<NodeVM> nodeMouseDown;
         public ICommand NodeMouseDown {
             get {
@@ -142,15 +162,32 @@ namespace MVVM {
                 return nodeMouseUp ?? (nodeMouseUp = new RelayCommand<NodeVM>(obj => {
                     if (AllowEdge) {
                         Node secondNode = graph.Nodes.FirstOrDefault(o => o.Name == obj.Node);
-                        if (FirstNode != secondNode) {
+                        if ((FirstNode != secondNode) && (FirstNode != null)) {
                             Edge edge = new Edge(FirstNode, secondNode);
-                            //graph.AddEdge(edge);
-                            EdgeVM edgeVM = new EdgeVM(FirstX, FirstY, MouseX, MouseY);
+                            EdgeVM edgeVM = new EdgeVM(edge.Id, FirstX, FirstY, MouseX, MouseY);
                             EdgesVM.Add(edgeVM);
                             CostNotSet = edge;
                             UpdateAddingEdge();
+                            FirstNode = null;
                         }
                     }
+                }));
+            }
+        }
+
+        private MyRelayCommand setEdgeCost;
+        public MyRelayCommand SetEdgeCost {
+            get {
+                return setEdgeCost ?? (setEdgeCost = new MyRelayCommand(obj => {
+                    int cost = Convert.ToInt32(obj as string);
+                    CostNotSet.Cost = cost;
+                    graph.AddEdge(CostNotSet);
+                    EdgeVM edgeVM = EdgesVM.FirstOrDefault(o => o.Id == CostNotSet.Id);
+                    edgeVM.Cost = cost;
+                    edgeVM.InvertSelected();
+                    CostNotSet = null;
+                    UpdateAddingEdge();
+                    CostField = null;
                 }));
             }
         }
@@ -222,7 +259,6 @@ namespace MVVM {
     }
 
     class EdgeVM : INotifyPropertyChanged {
-        public int Cost { get; set; } = -1;
         public double X1 { get; set; }
         public double Y1 { get; set; }
         public double X2 { get; set; }
@@ -230,8 +266,17 @@ namespace MVVM {
         public double X { get; set; }
         public double Y { get; set; }
         public bool Selected { get; set; }
+        public int Id { get; set; }
+        private int cost = -1;
+        public int Cost {
+            get { return cost; }
+            set {
+                cost = value;
+                OnPropertyChanged("Cost");
+            }
+        }
 
-        public EdgeVM(double x1, double y1, double x2, double y2) {
+        public EdgeVM(int id, double x1, double y1, double x2, double y2) {
             double widthForRectangle = 25;
             double heightForRectangle = 15;
             X1 = x1;
@@ -241,6 +286,7 @@ namespace MVVM {
             X = (x1 + x2) / 2 - widthForRectangle / 2 + widthForRectangle / 5;
             Y = (y1 + y2) / 2 - heightForRectangle / 2;
             Selected = true;
+            Id = id;
         }
 
         public void InvertSelected() {
