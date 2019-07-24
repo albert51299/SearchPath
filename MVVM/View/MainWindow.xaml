@@ -97,17 +97,6 @@
                             <Border Background="White" BorderThickness="2" Width="25" Height="20"
                                     Canvas.Left="{Binding X}" Canvas.Top="{Binding Y}">
                                 <TextBlock HorizontalAlignment="Center" Text="{Binding Cost}">
-                                    
-                                    <!---->
-                                    <i:Interaction.Triggers>
-                                        <i:EventTrigger EventName="MouseDown">
-                                        <i:InvokeCommandAction 
-                                        Command="{Binding Path=DataContext.EdgeMouseDown, RelativeSource={RelativeSource AncestorType=ItemsControl}}" 
-                                        CommandParameter="{Binding}"/>
-                                    </i:EventTrigger>
-                                    </i:Interaction.Triggers>
-                                    <!---->
-
                                     <TextBlock.Style>
                                         <Style TargetType="TextBlock">
                                             <Style.Triggers>
@@ -189,9 +178,11 @@
             </ItemsControl>
             
         </Canvas>
-        
-        <TextBox IsEnabled="{Binding ChangingCost}" HorizontalAlignment="Left" Height="22" Margin="592,8,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="30"/>
-        <TextBlock Height="22" Width="180" Text="Enter cost for selected edge here:" HorizontalAlignment="Left" Margin="412,8,0,0" TextWrapping="Wrap" VerticalAlignment="Top"/>
+
+        <TextBox IsEnabled="{Binding AddingEdge}" local:FocusExtension.IsFocused="{Binding AddingEdge}"  HorizontalAlignment="Left" Height="22" Margin="592,8,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="30">
+            
+        </TextBox>
+        <TextBlock Height="22" Width="180" Text="Enter cost for edge here:" HorizontalAlignment="Left" Margin="412,8,0,0" TextWrapping="Wrap" VerticalAlignment="Top"/>
     </Grid>
 </Window>
     

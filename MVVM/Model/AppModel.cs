@@ -18,14 +18,13 @@ namespace MVVM
     }
 
     public class Edge {
-        public int Cost { get; set; }
+        public int Cost { get; set; } = -1;
         public Node FirstNode { get; set; }
         public Node SecondNode { get; set; }
 
         public Edge(Node first, Node second) {
             FirstNode = first;
             SecondNode = second;
-            Cost = (new Random()).Next(1, 20);
         }
     }
 

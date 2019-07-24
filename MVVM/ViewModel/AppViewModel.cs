@@ -38,12 +38,13 @@ namespace MVVM {
             this.dialogService = dialogService;
         }
 
-        private bool changingCost;
-        public bool ChangingCost {
-            get { return changingCost; }
+        public Edge CostNotSet { get; set; }
+        private bool addingEdge;
+        public bool AddingEdge {
+            get { return addingEdge; }
             set {
-                changingCost = value;
-                OnPropertyChanged("ChangingCost");
+                addingEdge = value;
+                OnPropertyChanged("AddingEdge");
             }
         }
 
@@ -143,22 +144,13 @@ namespace MVVM {
                         Node secondNode = graph.Nodes.FirstOrDefault(o => o.Name == obj.Node);
                         if (FirstNode != secondNode) {
                             Edge edge = new Edge(FirstNode, secondNode);
-                            graph.AddEdge(edge);
-                            EdgeVM edgeVM = new EdgeVM(edge.Cost, FirstX, FirstY, MouseX, MouseY);
+                            //graph.AddEdge(edge);
+                            EdgeVM edgeVM = new EdgeVM(FirstX, FirstY, MouseX, MouseY);
                             EdgesVM.Add(edgeVM);
-                            UpdateChangingCost();
+                            CostNotSet = edge;
+                            UpdateAddingEdge();
                         }
                     }
-                }));
-            }
-        }
-
-        private RelayCommand<EdgeVM> edgeMouseDown;
-        public ICommand EdgeMouseDown {
-            get {
-                return edgeMouseDown ?? (edgeMouseDown = new RelayCommand<EdgeVM>(obj => {
-                    obj.InvertSelected();
-                    UpdateChangingCost();
                 }));
             }
         }
@@ -196,9 +188,8 @@ namespace MVVM {
                 PropertyChanged(this, new PropertyChangedEventArgs(prop));
         }
 
-        private void UpdateChangingCost() {
-            var selected = EdgesVM.Where(o => o.Selected);
-            ChangingCost = (selected.Count() != 0);
+        private void UpdateAddingEdge() {
+            AddingEdge = (CostNotSet != null);
         }
 
         private void UpdateAllowSearch() {
@@ -231,7 +222,7 @@ namespace MVVM {
     }
 
     class EdgeVM : INotifyPropertyChanged {
-        public int Cost { get; set; }
+        public int Cost { get; set; } = -1;
         public double X1 { get; set; }
         public double Y1 { get; set; }
         public double X2 { get; set; }
@@ -240,10 +231,9 @@ namespace MVVM {
         public double Y { get; set; }
         public bool Selected { get; set; }
 
-        public EdgeVM(int cost, double x1, double y1, double x2, double y2) {
+        public EdgeVM(double x1, double y1, double x2, double y2) {
             double widthForRectangle = 25;
             double heightForRectangle = 15;
-            Cost = cost;
             X1 = x1;
             Y1 = y1;
             X2 = x2;
