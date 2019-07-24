@@ -13,11 +13,11 @@
         <Style TargetType="RadioButton">
             <Style.Triggers>
                 <Trigger  Property="IsMouseOver" Value="True">
-                    <Setter Property="BorderThickness" Value="1"/>
+                    <Setter Property="BorderThickness" Value="2"/>
                     <Setter Property="BorderBrush" Value="Black"/>
                 </Trigger>
                 <Trigger  Property="IsChecked" Value="True">
-                    <Setter Property="BorderThickness" Value="1"/>
+                    <Setter Property="BorderThickness" Value="2"/>
                     <Setter Property="BorderBrush" Value="Red"/>
                 </Trigger>
             </Style.Triggers>
@@ -30,18 +30,33 @@
         <local:MouseButtonEventArgsToPointConverter x:Key="myConverter"/>
     </Window.Resources>
     <Grid>
-        <GridSplitter HorizontalAlignment="Left" Height="0" Margin="0,30,0,0" VerticalAlignment="Top" Width="792" RenderTransformOrigin="0.185,-10.077"/>
-        <RadioButton IsChecked="{Binding AllowNode}" Name="rbNode" Template="{StaticResource radio}" Width="50" Height="20" HorizontalAlignment="Left" VerticalAlignment="Top" RenderTransformOrigin="3.634,9.688" Margin="10,10,0,0">
-            <Image Source="/Resources/ImageForNode1.png" />
-        </RadioButton>
-        <RadioButton IsChecked="{Binding AllowEdge}" Name="rbEdge" Template="{StaticResource radio}" Width="45" Height="20" HorizontalAlignment="Left" Margin="62,10,0,0" VerticalAlignment="Top">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="25"></RowDefinition>
+            <RowDefinition Height="30"></RowDefinition>
+            <RowDefinition></RowDefinition>
+        </Grid.RowDefinitions>
+        <Menu Grid.Row="0" Height="25">
+            <MenuItem Header="File">
+                <MenuItem Header="Open"/>
+                <MenuItem Header="Save"/>
+            </MenuItem>
+        </Menu>
+
+        <RadioButton Grid.Row="1" IsChecked="{Binding AllowNode}" Name="rbNode" Template="{StaticResource radio}" 
+                     Width="50" Height="20" HorizontalAlignment="Left" Margin="2,0,0,0">
+                <Image Source="/Resources/ImageForNode1.png" />
+                </RadioButton>
+        <RadioButton Grid.Row="1" IsChecked="{Binding AllowEdge}" Name="rbEdge" Template="{StaticResource radio}" 
+                     Width="45" Height="20" HorizontalAlignment="Left" Margin="54,0,0,0">
             <Image Source="/Resources/Edge.png"/>
         </RadioButton>
-        <RadioButton IsChecked="{Binding AllowSelect}" Name="rbSelect" Template="{StaticResource radio}" Width="60" Height="20" HorizontalAlignment="Left" Margin="109,10,0,0" VerticalAlignment="Top">
+        <RadioButton Grid.Row="1" IsChecked="{Binding AllowSelect}" Name="rbSelect" Template="{StaticResource radio}" 
+                     Width="60" Height="20" HorizontalAlignment="Left" Margin="101,0,0,0">
             <Image Source="/Resources/Select.png"/>
         </RadioButton>
-        <Button Command="{Binding ClearCommand}" Content="Clear" HorizontalAlignment="Left" Margin="627,8,0,0" VerticalAlignment="Top" Width="75"/>
-        <Button Command="{Binding SearchCommand}" Content="Search path" HorizontalAlignment="Left" Margin="707,8,0,0" VerticalAlignment="Top" Width="75">
+        
+        <Button Grid.Row="1" Command="{Binding ClearCommand}" Content="Clear" Height="22" Width="75" HorizontalAlignment="Right" Margin="0,0,82,0"/>
+        <Button Grid.Row="1" Command="{Binding SearchCommand}" Content="Search path" Height="22" Width="75" HorizontalAlignment="Right" Margin="0,0,2,0">
             <Button.Style>
                 <Style TargetType="Button">
                     <Style.Triggers>
@@ -53,8 +68,29 @@
             </Button.Style>
         </Button>
 
-        <Canvas Name="parentCanvas" Background="Transparent" Margin="10,35,10,10">
+        <TextBlock Grid.Row="1" Text="Start:" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,455,0"/>
+        <TextBlock Grid.Row="1" Text="Terminal:" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,370,0"/>
 
+        <Canvas Grid.Row="1" Width="25" Height="25" Background="Transparent" Margin="0,0,95,0">
+            <Ellipse Fill="Red" Stroke="Black" StrokeThickness="2" Width="25" Height="25"/>
+            <TextBlock Background="Transparent" Text="1" Margin="5 3 0 0"></TextBlock>
+        </Canvas>
+        <Canvas Grid.Row="1" Width="25" Height="25" Background="Transparent" Margin="75,0,0,0">
+            <Ellipse Fill="Red" Stroke="Black" StrokeThickness="2" Width="25" Height="25"/>
+            <TextBlock Background="Transparent" Text="2" Margin="5 3 0 0"></TextBlock>
+        </Canvas>
+
+        <TextBox Grid.Row="1" Text="{Binding CostField}" IsEnabled="{Binding AddingEdge}" local:FocusExtension.IsFocused="{Binding AddingEdge}" 
+                 Height="22" Width="30" HorizontalAlignment="Right" Margin="0,0,162,0">
+            <TextBox.InputBindings>
+                <KeyBinding Key="Enter"
+                            Command="{Binding SetEdgeCost}"
+                            CommandParameter="{Binding Path=Text, RelativeSource={RelativeSource AncestorType=TextBox}}"/>
+            </TextBox.InputBindings>
+        </TextBox>
+        <TextBlock Grid.Row="1" Height="18" Text="Enter cost for edge here:" Margin="0,0,197,0" HorizontalAlignment="Right"/>
+
+        <Canvas Grid.Row="2" Name="parentCanvas" Background="Transparent" Margin="5,5,5,5">
             <i:Interaction.Triggers>
                 <i:EventTrigger EventName="MouseDown">
                     <i:InvokeCommandAction Command="{Binding CanvasMouseDown}" />
@@ -63,7 +99,7 @@
                 <i:EventTrigger EventName="MouseUp">
                     <i:InvokeCommandAction Command="{Binding CanvasMouseUp}" />
                 </i:EventTrigger>
-                
+
                 <i:EventTrigger EventName="MouseMove">
                     <cmd:EventToCommand
                                     Command="{Binding CanvasMouseMove}"
@@ -84,7 +120,9 @@
                 </ItemsControl.ItemsPanel>
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
-                        <Canvas Background="Transparent">
+                        <Canvas Background="Transparent"
+                                Width="{Binding ElementName=parentCanvas, Path=ActualWidth}" 
+                                Height="{Binding ElementName=parentCanvas, Path=ActualHeight}">
                             <Line Stroke="Black" StrokeThickness="2" 
                                   X1="{Binding X1}" Y1="{Binding Y1}" X2="{Binding X2}" Y2="{Binding Y2}">
                             </Line>
@@ -128,7 +166,9 @@
                 </ItemsControl.ItemsPanel>
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
-                        <Canvas Background="Transparent">
+                        <Canvas Background="Transparent"
+                                Width="{Binding ElementName=parentCanvas, Path=ActualWidth}" 
+                                Height="{Binding ElementName=parentCanvas, Path=ActualHeight}">
                             <Ellipse Stroke="Black" StrokeThickness="2" Width="30" Height="30">
 
                                 <i:Interaction.Triggers>
@@ -159,7 +199,7 @@
                                 </Ellipse.Style>
 
                             </Ellipse>
-                            <TextBlock Text="{Binding Node}" Margin="5 5 0 0"></TextBlock>
+                            <TextBlock Background="Transparent" Text="{Binding Node}" Margin="5 5 0 0"></TextBlock>
                         </Canvas>
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
@@ -170,17 +210,7 @@
                     </Style>
                 </ItemsControl.ItemContainerStyle>
             </ItemsControl>
-
         </Canvas>
-
-        <TextBox Text="{Binding CostField}" IsEnabled="{Binding AddingEdge}" local:FocusExtension.IsFocused="{Binding AddingEdge}"  HorizontalAlignment="Left" Height="22" Margin="592,8,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="30">
-            <TextBox.InputBindings>
-                <KeyBinding Key="Enter"
-                            Command="{Binding SetEdgeCost}"
-                            CommandParameter="{Binding Path=Text, RelativeSource={RelativeSource AncestorType=TextBox}}"/>
-            </TextBox.InputBindings>
-        </TextBox>
-        <TextBlock Height="22" Width="180" Text="Enter cost for edge here:" HorizontalAlignment="Left" Margin="412,8,0,0" TextWrapping="Wrap" VerticalAlignment="Top"/>
     </Grid>
 </Window>
     
