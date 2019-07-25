@@ -15,6 +15,10 @@ namespace MVVM
             Id = number;
             Name = (++number).ToString();
         }
+
+        public static void ResetNames() {
+            number = 0;
+        }
     }
 
     public class Edge {
@@ -28,6 +32,10 @@ namespace MVVM
             FirstNode = first;
             SecondNode = second;
             Id = ++number;
+        }
+
+        public static void ResetNames() {
+            number = 0;
         }
     }
 

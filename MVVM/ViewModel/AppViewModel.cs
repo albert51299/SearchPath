@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MVVM.ViewModel;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -14,8 +15,27 @@ using System.Windows.Shapes;
 namespace MVVM {
     class AppViewModel : INotifyPropertyChanged {
         private Graph graph = new Graph();
-        public ObservableCollection<NodeVM> NodesVM { get; set; } = new ObservableCollection<NodeVM>();
-        public ObservableCollection<EdgeVM> EdgesVM { get; set; } = new ObservableCollection<EdgeVM>();
+        //public ObservableCollection<NodeVM> NodesVM { get; set; } = new ObservableCollection<NodeVM>();
+        //public ObservableCollection<EdgeVM> EdgesVM { get; set; } = new ObservableCollection<EdgeVM>();
+
+        private ObservableCollection<NodeVM> nodesVM = new ObservableCollection<NodeVM>();
+        public ObservableCollection<NodeVM> NodesVM {
+            get { return nodesVM; }
+            set {
+                nodesVM = value;
+                OnPropertyChanged("NodesVM");
+            }
+        }
+
+        private ObservableCollection<EdgeVM> edgesVM = new ObservableCollection<EdgeVM>();
+        public ObservableCollection<EdgeVM> EdgesVM {
+            get { return edgesVM; }
+            set {
+                edgesVM = value;
+                OnPropertyChanged("EdgesVM");
+            }
+        }
+
         public bool AllowNode { get; set; }
         public bool AllowEdge { get; set; }
         public bool AllowSelect { get; set; }
@@ -205,11 +225,40 @@ namespace MVVM {
             }
         }
 
+        private MyRelayCommand lostFocusCommand;
+        public MyRelayCommand LostFocusCommand {
+            get {
+                return lostFocusCommand ?? (lostFocusCommand = new MyRelayCommand(obj => {
+                    List<EdgeVM> edgesToRemove = new List<EdgeVM>();
+                    foreach (var item in EdgesVM) {
+                        Edge edge = graph.Edges.FirstOrDefault(o => o.Id == item.Id);
+                        if (edge == null) {
+                            edgesToRemove.Add(item);
+                        }
+                    }
+                    foreach (var item in edgesToRemove) {
+                        EdgesVM.Remove(item);
+                    }
+                    CostNotSet = null;
+                    UpdateAddingEdge();
+                    CostField = null;
+                }));
+            }
+        }
+
         private MyRelayCommand clearCommand;
         public MyRelayCommand ClearCommand {
             get {
                 return clearCommand ?? (clearCommand = new MyRelayCommand(obj => {
-                    
+                    graph = new Graph();
+                    NodesVM = new ObservableCollection<NodeVM>();
+                    EdgesVM = new ObservableCollection<EdgeVM>();
+                    FirstNode = null;
+                    FirstSelected = null;
+                    SecondSelected = null;
+                    Node.ResetNames();
+                    Edge.ResetNames();
+                    path = "";
                 }));
             }
         }
@@ -244,73 +293,6 @@ namespace MVVM {
 
         private void UpdateAllowSearch() {
             AllowSearch = (FirstSelected != null) && (SecondSelected != null);
-        }
-    }
-
-    class NodeVM : INotifyPropertyChanged {
-        public string Node { get; set; }
-        public double X { get; set; }
-        public double Y { get; set; }
-        public bool Selected { get; set; }
-
-        public NodeVM(string node, double x, double y) {
-            Node = node;
-            X = x;
-            Y = y;
-        }
-
-        public void InvertSelected() {
-            Selected = !Selected;
-            OnPropertyChanged("Selected");
-        }
-
-        public event PropertyChangedEventHandler PropertyChanged;
-        public void OnPropertyChanged([CallerMemberName]string prop = "") {
-            if (PropertyChanged != null)
-                PropertyChanged(this, new PropertyChangedEventArgs(prop));
-        }
-    }
-
-    class EdgeVM : INotifyPropertyChanged {
-        public double X1 { get; set; }
-        public double Y1 { get; set; }
-        public double X2 { get; set; }
-        public double Y2 { get; set; }
-        public double X { get; set; }
-        public double Y { get; set; }
-        public bool Selected { get; set; }
-        public int Id { get; set; }
-        private int cost;
-        public int Cost {
-            get { return cost; }
-            set {
-                cost = value;
-                OnPropertyChanged("Cost");
-            }
-        }
-
-        public EdgeVM(int id, double x1, double y1, double x2, double y2) {
-            double widthForRectangle = 25;
-            double heightForRectangle = 15;
-            X1 = x1;
-            Y1 = y1;
-            X2 = x2;
-            Y2 = y2;
-            X = (x1 + x2) / 2 - widthForRectangle / 2 + widthForRectangle / 5;
-            Y = (y1 + y2) / 2 - heightForRectangle / 2;
-            Selected = true;
-            Id = id;
-        }
-
-        public void InvertSelected() {
-            Selected = !Selected;
-            OnPropertyChanged("Selected");
-        }
-
-        public event PropertyChangedEventHandler PropertyChanged;
-        public void OnPropertyChanged([CallerMemberName]string prop = "") {
-            if (PropertyChanged != null)
-                PropertyChanged(this, new PropertyChangedEventArgs(prop));
         }
     }
 }

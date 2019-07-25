@@ -78,6 +78,8 @@
     <Compile Include="Other\Commands.cs" />
     <Compile Include="Other\EventConverters.cs" />
     <Compile Include="Other\FocusExtension.cs" />
+    <Compile Include="ViewModel\EdgeVM.cs" />
+    <Compile Include="ViewModel\NodeVM.cs" />
     <Compile Include="View\ShowResultWindow.xaml.cs">
       <DependentUpon>ShowResultWindow.xaml</DependentUpon>
     </Compile>
