@@ -18,7 +18,7 @@ namespace MVVM
     }
 
     public class Edge {
-        public int Cost { get; set; } = -1;
+        public int Cost { get; set; }
         public Node FirstNode { get; set; }
         public Node SecondNode { get; set; }
         public int Id { get; set; }

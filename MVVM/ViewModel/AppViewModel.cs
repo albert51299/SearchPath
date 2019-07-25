@@ -115,7 +115,6 @@ namespace MVVM {
         public MyRelayCommand CanvasMouseUp {
             get {
                 return canvasMouseUp ?? (canvasMouseUp = new MyRelayCommand(obj => {
-                    CostField = "AA";
                     if (AllowEdge) {
                         FirstNode = null;
                     }
@@ -183,15 +182,25 @@ namespace MVVM {
         public MyRelayCommand SetEdgeCost {
             get {
                 return setEdgeCost ?? (setEdgeCost = new MyRelayCommand(obj => {
-                    int cost = Convert.ToInt32(obj as string);
-                    CostNotSet.Cost = cost;
-                    graph.AddEdge(CostNotSet);
                     EdgeVM edgeVM = EdgesVM.FirstOrDefault(o => o.Id == CostNotSet.Id);
-                    edgeVM.Cost = cost;
-                    edgeVM.InvertSelected();
-                    CostNotSet = null;
-                    UpdateAddingEdge();
-                    CostField = null;
+                    try {
+                        int cost = Convert.ToInt32(obj as string);
+                        if (cost < 0) {
+                            throw new Exception();
+                        }
+                        CostNotSet.Cost = cost;
+                        graph.AddEdge(CostNotSet);
+                        edgeVM.Cost = cost;
+                        edgeVM.InvertSelected();
+                    }
+                    catch (Exception) {
+                        EdgesVM.Remove(edgeVM);
+                    }
+                    finally {
+                        CostNotSet = null;
+                        UpdateAddingEdge();
+                        CostField = null;
+                    }
                 }));
             }
         }
@@ -271,7 +280,7 @@ namespace MVVM {
         public double Y { get; set; }
         public bool Selected { get; set; }
         public int Id { get; set; }
-        private int cost = -1;
+        private int cost;
         public int Cost {
             get { return cost; }
             set {
