@@ -65,12 +65,14 @@ namespace MVVM {
                 OnPropertyChanged("AllowSearch");
             }
         }
+
         private Node firstSelected;
         public Node FirstSelected {
             get { return firstSelected; }
             set {
                 firstSelected = value;
                 UpdateAllowSearch();
+                OnPropertyChanged("FirstSelected");
             }
         }
         private Node secondSelected;
@@ -79,6 +81,7 @@ namespace MVVM {
             set {
                 secondSelected = value;
                 UpdateAllowSearch();
+                OnPropertyChanged("SecondSelected");
             }
         }
 
@@ -112,6 +115,7 @@ namespace MVVM {
         public MyRelayCommand CanvasMouseUp {
             get {
                 return canvasMouseUp ?? (canvasMouseUp = new MyRelayCommand(obj => {
+                    CostField = "AA";
                     if (AllowEdge) {
                         FirstNode = null;
                     }

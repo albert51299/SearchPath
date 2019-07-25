@@ -73,11 +73,33 @@
 
         <Canvas Grid.Row="1" Width="25" Height="25" Background="Transparent" Margin="0,0,95,0">
             <Ellipse Fill="Red" Stroke="Black" StrokeThickness="2" Width="25" Height="25"/>
-            <TextBlock Background="Transparent" Text="1" Margin="5 3 0 0"></TextBlock>
+            <TextBlock Background="Transparent" Text="{Binding Path=FirstSelected.Name}" FontWeight="Bold" Margin="5 3 0 0"></TextBlock>
+            
+            <Canvas.Style>
+                <Style TargetType="Canvas">
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding FirstSelected}" Value="{x:Null}">
+                            <Setter  Property="Visibility" Value="Hidden"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Canvas.Style>
+            
         </Canvas>
         <Canvas Grid.Row="1" Width="25" Height="25" Background="Transparent" Margin="75,0,0,0">
             <Ellipse Fill="Red" Stroke="Black" StrokeThickness="2" Width="25" Height="25"/>
-            <TextBlock Background="Transparent" Text="2" Margin="5 3 0 0"></TextBlock>
+            <TextBlock Background="Transparent" Text="{Binding Path=SecondSelected.Name}" FontWeight="Bold" Margin="5 3 0 0"></TextBlock>
+
+            <Canvas.Style>
+                <Style TargetType="Canvas">
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding SecondSelected}" Value="{x:Null}">
+                            <Setter  Property="Visibility" Value="Hidden"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Canvas.Style>
+
         </Canvas>
 
         <TextBox Grid.Row="1" Text="{Binding CostField}" IsEnabled="{Binding AddingEdge}" local:FocusExtension.IsFocused="{Binding AddingEdge}" 
@@ -96,9 +118,9 @@
                     <i:InvokeCommandAction Command="{Binding CanvasMouseDown}" />
                 </i:EventTrigger>
 
-                <i:EventTrigger EventName="MouseUp">
+                <!--<i:EventTrigger EventName="MouseUp">
                     <i:InvokeCommandAction Command="{Binding CanvasMouseUp}" />
-                </i:EventTrigger>
+                </i:EventTrigger>-->
 
                 <i:EventTrigger EventName="MouseMove">
                     <cmd:EventToCommand
@@ -120,9 +142,7 @@
                 </ItemsControl.ItemsPanel>
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
-                        <Canvas Background="Transparent"
-                                Width="{Binding ElementName=parentCanvas, Path=ActualWidth}" 
-                                Height="{Binding ElementName=parentCanvas, Path=ActualHeight}">
+                        <Canvas Background="Transparent">
                             <Line Stroke="Black" StrokeThickness="2" 
                                   X1="{Binding X1}" Y1="{Binding Y1}" X2="{Binding X2}" Y2="{Binding Y2}">
                             </Line>
@@ -166,9 +186,7 @@
                 </ItemsControl.ItemsPanel>
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
-                        <Canvas Background="Transparent"
-                                Width="{Binding ElementName=parentCanvas, Path=ActualWidth}" 
-                                Height="{Binding ElementName=parentCanvas, Path=ActualHeight}">
+                        <Canvas Background="Transparent">
                             <Ellipse Stroke="Black" StrokeThickness="2" Width="30" Height="30">
 
                                 <i:Interaction.Triggers>
@@ -199,7 +217,23 @@
                                 </Ellipse.Style>
 
                             </Ellipse>
-                            <TextBlock Background="Transparent" Text="{Binding Node}" Margin="5 5 0 0"></TextBlock>
+                            <TextBlock Background="Transparent" Text="{Binding Node}" Margin="5 5 0 0">
+                                
+                                <i:Interaction.Triggers>
+                                    <i:EventTrigger EventName="MouseDown">
+                                        <i:InvokeCommandAction 
+                                        Command="{Binding Path=DataContext.NodeMouseDown, RelativeSource={RelativeSource AncestorType=ItemsControl}}" 
+                                        CommandParameter="{Binding}"/>
+                                    </i:EventTrigger>
+
+                                    <i:EventTrigger EventName="MouseUp">
+                                        <i:InvokeCommandAction 
+                                        Command="{Binding Path=DataContext.NodeMouseUp, RelativeSource={RelativeSource AncestorType=ItemsControl}}" 
+                                        CommandParameter="{Binding}"/>
+                                    </i:EventTrigger>
+                                </i:Interaction.Triggers>
+                                
+                            </TextBlock>
                         </Canvas>
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
