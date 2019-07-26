@@ -8,14 +8,12 @@ namespace MVVM.Model {
         public int Cost { get; set; }
         public int FirstIndex { get; set; }
         public int SecondIndex { get; set; }
-        //public int AppId { get; set; }
         [NotMapped]
         public static int Number { get; set; }
 
         public Edge(int first, int second) {
             FirstIndex = first;
             SecondIndex = second;
-            //AppId = ++Number;
         }
     }
 }

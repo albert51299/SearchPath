@@ -55,7 +55,7 @@ namespace MVVM.ViewModel {
         }
 
         public Edge EdgeWithoutCost { get; set; }
-        public EdgeVM EdgeVMWithoutCost { get; set; }
+        public List<EdgeVM> EdgesVMWithoutCost { get; set; } = new List<EdgeVM>();
 
         private bool awaitCost;
         public bool AwaitCost {
@@ -185,8 +185,8 @@ namespace MVVM.ViewModel {
                         Node secondNode = graph.Nodes.FirstOrDefault(o => o.Name == obj.Node);
                         if ((FirstNode != secondNode) && (FirstNode != null)) {
                             EdgeWithoutCost = new Edge(FirstNode.Index, secondNode.Index);
-                            EdgeVMWithoutCost = new EdgeVM(FirstX, FirstY, MouseX, MouseY);
-                            EdgesVM.Add(EdgeVMWithoutCost);
+                            EdgesVMWithoutCost.Add(new EdgeVM(FirstX, FirstY, MouseX, MouseY));
+                            EdgesVM.Add(EdgesVMWithoutCost.Last());
                             FirstNode = null;
                             AwaitCost = true;
                         }
@@ -199,6 +199,7 @@ namespace MVVM.ViewModel {
         public MyRelayCommand SetEdgeCost {
             get {
                 return setEdgeCost ?? (setEdgeCost = new MyRelayCommand(obj => {
+                    EdgeVM current = EdgesVMWithoutCost.Last();
                     try {
                         int cost = Convert.ToInt32(obj as string);
                         if (cost < 0) {
@@ -206,15 +207,15 @@ namespace MVVM.ViewModel {
                         }
                         EdgeWithoutCost.Cost = cost;
                         graph.AddEdge(EdgeWithoutCost);
-                        EdgeVMWithoutCost.Cost = cost;
-                        EdgeVMWithoutCost.InvertSelected();
+                        current.Cost = cost;
+                        current.InvertSelected();
                     }
                     catch (Exception) {
-                        EdgesVM.Remove(EdgeVMWithoutCost);
+                        EdgesVM.Remove(current);
                     }
                     finally {
                         EdgeWithoutCost = null;
-                        EdgeVMWithoutCost = null;
+                        EdgesVMWithoutCost.Remove(current);
                         CostField = null;
                         AwaitCost = false;
                     }
@@ -226,11 +227,10 @@ namespace MVVM.ViewModel {
         public MyRelayCommand LostFocusCommand {
             get {
                 return lostFocusCommand ?? (lostFocusCommand = new MyRelayCommand(obj => {
-                    for (int i = EdgesVM.Count - 1; i >= graph.Edges.Count; i--) {
-                        EdgesVM.RemoveAt(i);
+                    foreach (var item in EdgesVMWithoutCost) {
+                        EdgesVM.Remove(item);
                     }
                     EdgeWithoutCost = null;
-                    EdgeVMWithoutCost = null;
                     CostField = null;
                     AwaitCost = false;
                 }));

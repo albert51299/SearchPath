@@ -10,7 +10,6 @@ namespace MVVM.ViewModel {
         public double X { get; set; }
         public double Y { get; set; }
         public bool Selected { get; set; }
-        //public int AppId { get; set; }
         private int cost;
         public int Cost {
             get { return cost; }
@@ -20,7 +19,6 @@ namespace MVVM.ViewModel {
             }
         }
 
-        //public EdgeVM(int id, double x1, double y1, double x2, double y2) {
         public EdgeVM(double x1, double y1, double x2, double y2) {
             double widthForRectangle = 25;
             double heightForRectangle = 15;
@@ -31,7 +29,6 @@ namespace MVVM.ViewModel {
             X = (x1 + x2) / 2 - widthForRectangle / 2 + widthForRectangle / 5;
             Y = (y1 + y2) / 2 - heightForRectangle / 2;
             Selected = true;
-            //AppId = id;
         }
 
         public void InvertSelected() {
