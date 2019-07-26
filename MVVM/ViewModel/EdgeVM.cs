@@ -1,14 +1,20 @@
-﻿using System.ComponentModel;
+﻿using MVVM.Other;
+using System.ComponentModel;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Runtime.CompilerServices;
 
 namespace MVVM.ViewModel {
     class EdgeVM : INotifyPropertyChanged {
+        public int Id { get; set; }
+        public int SessionId { get; set; }
+        public Session Session { get;set;}
         public double X1 { get; set; }
         public double Y1 { get; set; }
         public double X2 { get; set; }
         public double Y2 { get; set; }
         public double X { get; set; }
         public double Y { get; set; }
+        [NotMapped]
         public bool Selected { get; set; }
         private int cost;
         public int Cost {

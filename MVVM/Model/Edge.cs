@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
-
-namespace MVVM.Model {
+﻿namespace MVVM.Model {
     class Edge {
         public int Id { get; set; }
         public int ModelStateId { get; set; }
@@ -8,8 +6,10 @@ namespace MVVM.Model {
         public int Cost { get; set; }
         public int FirstIndex { get; set; }
         public int SecondIndex { get; set; }
-        [NotMapped]
-        public static int Number { get; set; }
+
+        public Edge() {
+
+        }
 
         public Edge(int first, int second) {
             FirstIndex = first;

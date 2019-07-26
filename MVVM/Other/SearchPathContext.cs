@@ -8,7 +8,7 @@ namespace MVVM.Other {
         public DbSet<Session> Sessions { get; set; }
         public DbSet<NodeVM> NodeVMs { get; set; }
         public DbSet<EdgeVM> EdgeVMs { get; set; }
-        public DbSet<Graph> Graphs { get; set; }
+        public DbSet<ModelState> ModelStates { get; set; }
         public DbSet<Node> Nodes { get; set; }
         public DbSet<Edge> Edges { get; set; }
 

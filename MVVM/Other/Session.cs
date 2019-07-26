@@ -10,7 +10,10 @@ namespace MVVM.Other {
         public string Name { get; set; }
         public ICollection<NodeVM> NodeVMs { get; set; }
         public ICollection<EdgeVM> EdgeVMs { get; set; }
-        public int ModelStateId { get; set; }
         public ModelState ModelState { get; set; }
+
+        public Session(string name) {
+            Name = name;
+        }
     }
 }

@@ -145,13 +145,13 @@ namespace MVVM.ViewModel {
             get {
                 return nodeMouseDown ?? (nodeMouseDown = new RelayCommand<NodeVM>(obj => {
                     if (AllowEdge) {
-                        FirstNode = graph.Nodes.FirstOrDefault(o => o.Name == obj.Node);
+                        FirstNode = graph.Nodes.FirstOrDefault(o => o.Name == obj.Name);
                         FirstX = MouseX;
                         FirstY = MouseY;
                     }
                     if (AllowSelect) {
-                        NodesVM.FirstOrDefault(o => o.Node == obj.Node).InvertSelected();
-                        Node currentNode = graph.Nodes.FirstOrDefault(o => o.Name == obj.Node);
+                        NodesVM.FirstOrDefault(o => o.Name == obj.Name).InvertSelected();
+                        Node currentNode = graph.Nodes.FirstOrDefault(o => o.Name == obj.Name);
                         if (currentNode == FirstSelected) {
                             FirstSelected = null;
                         }
@@ -160,8 +160,8 @@ namespace MVVM.ViewModel {
                         }
                         else {
                             if ((FirstSelected != null) && (SecondSelected != null)) {
-                                NodesVM.FirstOrDefault(o => o.Node == FirstSelected.Name).InvertSelected();
-                                NodesVM.FirstOrDefault(o => o.Node == SecondSelected.Name).InvertSelected();
+                                NodesVM.FirstOrDefault(o => o.Name == FirstSelected.Name).InvertSelected();
+                                NodesVM.FirstOrDefault(o => o.Name == SecondSelected.Name).InvertSelected();
                                 FirstSelected = null;
                                 SecondSelected = null;
                             }
@@ -182,7 +182,7 @@ namespace MVVM.ViewModel {
             get {
                 return nodeMouseUp ?? (nodeMouseUp = new RelayCommand<NodeVM>(obj => {
                     if (AllowEdge) {
-                        Node secondNode = graph.Nodes.FirstOrDefault(o => o.Name == obj.Node);
+                        Node secondNode = graph.Nodes.FirstOrDefault(o => o.Name == obj.Name);
                         if ((FirstNode != secondNode) && (FirstNode != null)) {
                             EdgeWithoutCost = new Edge(FirstNode.Index, secondNode.Index);
                             EdgesVMWithoutCost.Add(new EdgeVM(FirstX, FirstY, MouseX, MouseY));
@@ -248,7 +248,6 @@ namespace MVVM.ViewModel {
                     FirstSelected = null;
                     SecondSelected = null;
                     Node.Number = 0;
-                    Edge.Number = 0;
                     path = "";
                 }));
             }
@@ -268,6 +267,48 @@ namespace MVVM.ViewModel {
                     }
                     //
                     if (dialogService.Show(this) == true) { }
+                }));
+            }
+        }
+
+        private MyRelayCommand saveCommand;
+        public MyRelayCommand SaveCommand {
+            get {
+                return saveCommand ?? (saveCommand = new MyRelayCommand(obj => {
+                    using (SearchPathContext db = new SearchPathContext()) {
+                        Session session = new Session("first");
+                        ModelState modelState = new ModelState();
+                        modelState.Session = session;
+
+                        for (int i = 0; i < NodesVM.Count; i++) {
+                            NodesVM[i].Session = session;
+                            graph.Nodes[i].ModelState = modelState;
+                        }
+
+                        for (int i = 0; i < EdgesVM.Count; i++) {
+                            EdgesVM[i].Session = session;
+                            graph.Edges[i].ModelState = modelState;
+                        }
+
+                        db.Sessions.Add(session);
+                        db.ModelStates.Add(modelState);
+                        db.NodeVMs.AddRange(NodesVM);
+                        db.EdgeVMs.AddRange(EdgesVM);
+                        db.Nodes.AddRange(graph.Nodes);
+                        db.Edges.AddRange(graph.Edges);
+                        db.SaveChanges();
+                    }
+                }));
+            }
+        }
+
+        private MyRelayCommand loadCommand;
+        public MyRelayCommand LoadCommand {
+            get {
+                return loadCommand ?? (loadCommand = new MyRelayCommand(obj => {
+                    using (SearchPathContext db = new SearchPathContext()) {
+                        
+                    }
                 }));
             }
         }

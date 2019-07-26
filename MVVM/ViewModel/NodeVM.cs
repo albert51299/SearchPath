@@ -1,15 +1,21 @@
-﻿using System.ComponentModel;
+﻿using MVVM.Other;
+using System.ComponentModel;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Runtime.CompilerServices;
 
 namespace MVVM.ViewModel {
     class NodeVM : INotifyPropertyChanged {
-        public string Node { get; set; }
+        public int Id { get; set; }
+        public int SessionId { get; set; }
+        public Session Session { get; set; }
+        public string Name { get; set; }
         public double X { get; set; }
         public double Y { get; set; }
+        [NotMapped]
         public bool Selected { get; set; }
 
-        public NodeVM(string node, double x, double y) {
-            Node = node;
+        public NodeVM(string name, double x, double y) {
+            Name = name;
             X = x;
             Y = y;
         }
