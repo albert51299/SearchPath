@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
+﻿using System.Windows;
 
 namespace MVVM.Other
 {
-    public static class FocusExtension {
+    static class FocusExtension {
         public static bool GetIsFocused(DependencyObject obj) {
             return (bool)obj.GetValue(IsFocusedProperty);
         }

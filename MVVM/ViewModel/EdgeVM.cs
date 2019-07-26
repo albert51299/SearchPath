@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
+﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MVVM.ViewModel {
     class EdgeVM : INotifyPropertyChanged {
@@ -15,7 +10,7 @@ namespace MVVM.ViewModel {
         public double X { get; set; }
         public double Y { get; set; }
         public bool Selected { get; set; }
-        public int Id { get; set; }
+        //public int AppId { get; set; }
         private int cost;
         public int Cost {
             get { return cost; }
@@ -25,7 +20,8 @@ namespace MVVM.ViewModel {
             }
         }
 
-        public EdgeVM(int id, double x1, double y1, double x2, double y2) {
+        //public EdgeVM(int id, double x1, double y1, double x2, double y2) {
+        public EdgeVM(double x1, double y1, double x2, double y2) {
             double widthForRectangle = 25;
             double heightForRectangle = 15;
             X1 = x1;
@@ -35,7 +31,7 @@ namespace MVVM.ViewModel {
             X = (x1 + x2) / 2 - widthForRectangle / 2 + widthForRectangle / 5;
             Y = (y1 + y2) / 2 - heightForRectangle / 2;
             Selected = true;
-            Id = id;
+            //AppId = id;
         }
 
         public void InvertSelected() {

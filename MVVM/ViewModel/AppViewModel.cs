@@ -1,22 +1,17 @@
-﻿using MVVM.ViewModel;
+﻿using MVVM.Model;
+using MVVM.Other;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Input;
-using System.Windows.Shapes;
 
-namespace MVVM {
+namespace MVVM.ViewModel {
     class AppViewModel : INotifyPropertyChanged {
         private Graph graph = new Graph();
-        //public ObservableCollection<NodeVM> NodesVM { get; set; } = new ObservableCollection<NodeVM>();
-        //public ObservableCollection<EdgeVM> EdgesVM { get; set; } = new ObservableCollection<EdgeVM>();
 
         private ObservableCollection<NodeVM> nodesVM = new ObservableCollection<NodeVM>();
         public ObservableCollection<NodeVM> NodesVM {
@@ -59,21 +54,24 @@ namespace MVVM {
             this.dialogService = dialogService;
         }
 
+        public Edge EdgeWithoutCost { get; set; }
+        public EdgeVM EdgeVMWithoutCost { get; set; }
+
+        private bool awaitCost;
+        public bool AwaitCost {
+            get { return awaitCost; }
+            set {
+                awaitCost = value;
+                OnPropertyChanged("AwaitCost");
+            }
+        } 
+            
         private string costField;
         public string CostField {
             get { return costField; }
             set {
                 costField = value;
                 OnPropertyChanged("CostField");
-            }
-        }
-        public Edge CostNotSet { get; set; }
-        private bool addingEdge;
-        public bool AddingEdge {
-            get { return addingEdge; }
-            set {
-                addingEdge = value;
-                OnPropertyChanged("AddingEdge");
             }
         }
 
@@ -186,12 +184,11 @@ namespace MVVM {
                     if (AllowEdge) {
                         Node secondNode = graph.Nodes.FirstOrDefault(o => o.Name == obj.Node);
                         if ((FirstNode != secondNode) && (FirstNode != null)) {
-                            Edge edge = new Edge(FirstNode, secondNode);
-                            EdgeVM edgeVM = new EdgeVM(edge.Id, FirstX, FirstY, MouseX, MouseY);
-                            EdgesVM.Add(edgeVM);
-                            CostNotSet = edge;
-                            UpdateAddingEdge();
+                            EdgeWithoutCost = new Edge(FirstNode.Index, secondNode.Index);
+                            EdgeVMWithoutCost = new EdgeVM(FirstX, FirstY, MouseX, MouseY);
+                            EdgesVM.Add(EdgeVMWithoutCost);
                             FirstNode = null;
+                            AwaitCost = true;
                         }
                     }
                 }));
@@ -202,24 +199,24 @@ namespace MVVM {
         public MyRelayCommand SetEdgeCost {
             get {
                 return setEdgeCost ?? (setEdgeCost = new MyRelayCommand(obj => {
-                    EdgeVM edgeVM = EdgesVM.FirstOrDefault(o => o.Id == CostNotSet.Id);
                     try {
                         int cost = Convert.ToInt32(obj as string);
                         if (cost < 0) {
                             throw new Exception();
                         }
-                        CostNotSet.Cost = cost;
-                        graph.AddEdge(CostNotSet);
-                        edgeVM.Cost = cost;
-                        edgeVM.InvertSelected();
+                        EdgeWithoutCost.Cost = cost;
+                        graph.AddEdge(EdgeWithoutCost);
+                        EdgeVMWithoutCost.Cost = cost;
+                        EdgeVMWithoutCost.InvertSelected();
                     }
                     catch (Exception) {
-                        EdgesVM.Remove(edgeVM);
+                        EdgesVM.Remove(EdgeVMWithoutCost);
                     }
                     finally {
-                        CostNotSet = null;
-                        UpdateAddingEdge();
+                        EdgeWithoutCost = null;
+                        EdgeVMWithoutCost = null;
                         CostField = null;
+                        AwaitCost = false;
                     }
                 }));
             }
@@ -229,19 +226,13 @@ namespace MVVM {
         public MyRelayCommand LostFocusCommand {
             get {
                 return lostFocusCommand ?? (lostFocusCommand = new MyRelayCommand(obj => {
-                    List<EdgeVM> edgesToRemove = new List<EdgeVM>();
-                    foreach (var item in EdgesVM) {
-                        Edge edge = graph.Edges.FirstOrDefault(o => o.Id == item.Id);
-                        if (edge == null) {
-                            edgesToRemove.Add(item);
-                        }
+                    for (int i = EdgesVM.Count - 1; i >= graph.Edges.Count; i--) {
+                        EdgesVM.RemoveAt(i);
                     }
-                    foreach (var item in edgesToRemove) {
-                        EdgesVM.Remove(item);
-                    }
-                    CostNotSet = null;
-                    UpdateAddingEdge();
+                    EdgeWithoutCost = null;
+                    EdgeVMWithoutCost = null;
                     CostField = null;
+                    AwaitCost = false;
                 }));
             }
         }
@@ -256,8 +247,8 @@ namespace MVVM {
                     FirstNode = null;
                     FirstSelected = null;
                     SecondSelected = null;
-                    Node.ResetNames();
-                    Edge.ResetNames();
+                    Node.Number = 0;
+                    Edge.Number = 0;
                     path = "";
                 }));
             }
@@ -285,10 +276,6 @@ namespace MVVM {
         public void OnPropertyChanged([CallerMemberName]string prop = "") {
             if (PropertyChanged != null)
                 PropertyChanged(this, new PropertyChangedEventArgs(prop));
-        }
-
-        private void UpdateAddingEdge() {
-            AddingEdge = (CostNotSet != null);
         }
 
         private void UpdateAllowSearch() {

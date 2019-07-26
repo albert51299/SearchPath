@@ -1,45 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
-namespace MVVM
-{
-    public class Node {
-        public int Id { get; set; }
-        public string Name { get; set; }
-        private static int number;
-
-        public Node() {
-            Id = number;
-            Name = (++number).ToString();
-        }
-
-        public static void ResetNames() {
-            number = 0;
-        }
-    }
-
-    public class Edge {
-        public int Cost { get; set; }
-        public Node FirstNode { get; set; }
-        public Node SecondNode { get; set; }
-        public int Id { get; set; }
-        private static int number;
-
-        public Edge(Node first, Node second) {
-            FirstNode = first;
-            SecondNode = second;
-            Id = ++number;
-        }
-
-        public static void ResetNames() {
-            number = 0;
-        }
-    }
-
-    public class Graph {
+namespace MVVM.Model {
+    class Graph {
         const int max = 2147483647;
         const int n = 100;
         int[,] matrix = new int[n, n];
@@ -60,8 +22,8 @@ namespace MVVM
 
         public void AddEdge(Edge edge) {
             Edges.Add(edge);
-            matrix[edge.FirstNode.Id, edge.SecondNode.Id] = edge.Cost;
-            matrix[edge.SecondNode.Id, edge.FirstNode.Id] = edge.Cost;
+            matrix[edge.FirstIndex, edge.SecondIndex] = edge.Cost;
+            matrix[edge.SecondIndex, edge.FirstIndex] = edge.Cost;
         }
 
         public SearchResult SearchPath(Node start, Node end) {
@@ -93,16 +55,16 @@ namespace MVVM
                 dist[i] = max;
                 visited[i] = false;
             }
-            dist[start.Id] = 0;
-            visited[start.Id] = true;
+            dist[start.Index] = 0;
+            visited[start.Index] = true;
             y = start;
 
             while (y != end) {
                 // updating marks
-                for (int i = 0; i < N; i++) { 
-                    if ((A[i, y.Id] != max) && (A[i, y.Id] != 0) && (visited[i] == false)) {
+                for (int i = 0; i < N; i++) {
+                    if ((A[i, y.Index] != max) && (A[i, y.Index] != 0) && (visited[i] == false)) {
                         int dx = dist[i];
-                        int sum = dist[y.Id] + A[i, y.Id];
+                        int sum = dist[y.Index] + A[i, y.Index];
                         if (sum < dx) {
                             dist[i] = sum;
                         }
@@ -118,11 +80,11 @@ namespace MVVM
                 }
                 if (!pathExist) {
                     return new SearchResult(false, 0, new List<Node>());
-                    
+
                 }
                 // search node with minimum weight and make it visited
                 int min = max;
-                for (int i = 0; i < N; i++) { 
+                for (int i = 0; i < N; i++) {
                     if ((dist[i] < min) && (!visited[i])) {
                         min = dist[i];
                     }
@@ -135,17 +97,17 @@ namespace MVVM
                     }
                 }
             }
-            int length = dist[end.Id];
+            int length = dist[end.Index];
             List<Node> path = new List<Node>();
-            int distST = dist[end.Id];
+            int distST = dist[end.Index];
             path.Add(end);
             Node endNode = end;
             // restoring path
             while (endNode != start) {
                 for (int i = 0; i < N; i++) {
-                    if (i != endNode.Id) {
+                    if (i != endNode.Index) {
                         int distSV = dist[i];
-                        int distVT = A[i, endNode.Id];
+                        int distVT = A[i, endNode.Index];
                         if (distSV + distVT == distST) {
                             distST = distSV;
                             path.Insert(0, Nodes[i]);
@@ -159,7 +121,7 @@ namespace MVVM
         }
     }
 
-    public class SearchResult {
+    class SearchResult {
         public bool PathExist { get; set; }
         public int PathLength { get; }
         public List<Node> Path { get; }

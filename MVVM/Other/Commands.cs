@@ -1,13 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Windows.Input;
 
-namespace MVVM {
-    public class MyRelayCommand : ICommand {
+namespace MVVM.Other {
+    class MyRelayCommand : ICommand {
         private Action<object> execute;
         private Func<object, bool> canExecute;
 
@@ -30,7 +26,7 @@ namespace MVVM {
         }
     }
 
-    public class RelayCommand<T> : ICommand {
+    class RelayCommand<T> : ICommand {
         private Predicate<T> _canExecute;
         private Action<T> _execute;
 
