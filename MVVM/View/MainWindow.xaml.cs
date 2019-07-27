@@ -9,7 +9,7 @@ namespace MVVM {
     partial class MainWindow : Window {
         public MainWindow() {
             InitializeComponent();
-            DataContext = new AppViewModel(new DefaultDialogService(this));
+            DataContext = new MainViewModel(new DefaultDialogService(this));
         }
     }
 }

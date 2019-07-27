@@ -1,4 +1,5 @@
 ﻿using MVVM.View;
+using MVVM.ViewModel;
 using System.Windows;
 
 namespace MVVM.Other {
@@ -6,9 +7,9 @@ namespace MVVM.Other {
         string SessionName { get; set; }
         bool IsConfirmed { get; set; }
         bool ShowSaveWindow();
-        //bool ShowLoadWindow();
+        bool ShowLoadWindow();
         void ShowMessage(string message);
-        bool ShowSearchResult(object viewModel);
+        bool ShowSearchResultWindow(object viewModel);
     }
 
     class DefaultDialogService : IDialogService {
@@ -29,16 +30,23 @@ namespace MVVM.Other {
             return false;
         }
 
-        /*public bool ShowLoadWindow() {
-            
-        }*/
+        public bool ShowLoadWindow() {
+            LoadWindow window = new LoadWindow();
+            window.Owner = owner;
+            if (window.ShowDialog() == true) {
+                return true;
+            }
+            SessionName = (window.DataContext as LoadViewModel).SelectedSession;
+            IsConfirmed = (window.DataContext as LoadViewModel).IsConfirmed;
+            return false;
+        }
 
         public void ShowMessage(string message) {
             MessageBox.Show(message);
         }
 
-        public bool ShowSearchResult(object viewModel) {
-            ShowResultWindow window = new ShowResultWindow();
+        public bool ShowSearchResultWindow(object viewModel) {
+            SearchResultWindow window = new SearchResultWindow();
             window.Owner = owner;
             window.DataContext = viewModel;
             if (window.ShowDialog() == true) {

@@ -10,7 +10,7 @@ using System.Windows;
 using System.Windows.Input;
 
 namespace MVVM.ViewModel {
-    class AppViewModel : INotifyPropertyChanged {
+    class MainViewModel : INotifyPropertyChanged {
         private Graph graph = new Graph();
 
         private ObservableCollection<NodeVM> nodesVM = new ObservableCollection<NodeVM>();
@@ -50,7 +50,7 @@ namespace MVVM.ViewModel {
         public SearchResult SearchResult { get; set; }
         public IDialogService dialogService;
 
-        public AppViewModel(IDialogService dialogService) {
+        public MainViewModel(IDialogService dialogService) {
             this.dialogService = dialogService;
         }
 
@@ -266,7 +266,7 @@ namespace MVVM.ViewModel {
                         path += item.Name + " ";
                     }
                     //
-                    if (dialogService.ShowSearchResult(this) == true) { }
+                    if (dialogService.ShowSearchResultWindow(this) == true) { }
                 }));
             }
         }
@@ -320,9 +320,10 @@ namespace MVVM.ViewModel {
         public MyRelayCommand LoadCommand {
             get {
                 return loadCommand ?? (loadCommand = new MyRelayCommand(obj => {
-                    using (SearchPathContext db = new SearchPathContext()) {
-                        
-                    }
+                    if (dialogService.ShowLoadWindow() == true) { }
+
+
+
                 }));
             }
         }

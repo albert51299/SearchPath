@@ -4,8 +4,8 @@ namespace MVVM {
     /// <summary>
     /// Interaction logic for ShowResultWindow.xaml
     /// </summary>
-    partial class ShowResultWindow : Window {
-        public ShowResultWindow() {
+    partial class SearchResultWindow : Window {
+        public SearchResultWindow() {
             InitializeComponent();
         }
     }
