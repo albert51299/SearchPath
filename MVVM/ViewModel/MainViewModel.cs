@@ -310,6 +310,7 @@ namespace MVVM.ViewModel {
                                     db.SaveChanges();
                                 }
                             }
+                            dialogService.ShowMessage("Session saved");
                         }
                     }
                 }));
@@ -321,9 +322,9 @@ namespace MVVM.ViewModel {
             get {
                 return loadCommand ?? (loadCommand = new MyRelayCommand(obj => {
                     if (dialogService.ShowLoadWindow() == true) { }
-
-
-
+                    if (dialogService.IsConfirmed) {
+                        // load ...
+                    }
                 }));
             }
         }

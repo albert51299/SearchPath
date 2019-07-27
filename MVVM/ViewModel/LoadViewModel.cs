@@ -16,6 +16,15 @@ namespace MVVM.ViewModel {
             }
         }
 
+        private bool haveSaves;
+        public bool HaveSaves {
+            get { return haveSaves; }
+            set {
+                haveSaves = value;
+                OnPropertyChanged("HaveSaves");
+            }
+        }
+
         private string selectedSession;
         public string SelectedSession {
             get { return selectedSession; }
@@ -35,6 +44,7 @@ namespace MVVM.ViewModel {
                             Sessions.Add(item);
                         }
                     }
+                    HaveSaves = (Sessions.Count != 0);
                 }));
             }
         }
@@ -44,16 +54,6 @@ namespace MVVM.ViewModel {
             get {
                 return loadCommand ?? (loadCommand = new MyRelayCommand(obj => {
                     IsConfirmed = true;
-                    // close window
-                }));
-            }
-        }
-
-        private MyRelayCommand cancelCommand;
-        public MyRelayCommand CancelCommand {
-            get {
-                return cancelCommand ?? (cancelCommand = new MyRelayCommand(obj => {
-                    // close window
                 }));
             }
         }
@@ -62,7 +62,13 @@ namespace MVVM.ViewModel {
         public MyRelayCommand RemoveCommand {
             get {
                 return removeCommand ?? (removeCommand = new MyRelayCommand(obj => {
-                    
+                    using (SearchPathContext db = new SearchPathContext()) {
+                        var session = db.Sessions.FirstOrDefault(o => o.Name == SelectedSession);
+                        db.Sessions.Remove(session);
+                        db.SaveChanges();
+                    }
+                    Sessions.Remove(SelectedSession);
+                    HaveSaves = (Sessions.Count != 0);
                 }));
             }
         }

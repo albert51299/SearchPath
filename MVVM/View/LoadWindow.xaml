@@ -5,7 +5,10 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
         Title="Load" Height="200" Width="300" WindowStartupLocation="CenterOwner"
-        xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity">
+        xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
+        xmlns:i1="http://schemas.microsoft.com/expression/2010/interactivity" 
+        xmlns:ei="http://schemas.microsoft.com/expression/2010/interactions"
+        Name="loadWindow">
 
     <i:Interaction.Triggers>
         <i:EventTrigger EventName="Loaded">
@@ -28,12 +31,58 @@
             <RowDefinition Height="0.7*"/>
             <RowDefinition Height="0.2*"/>
         </Grid.RowDefinitions>
-        <TextBlock Text="Sessions:"/>
+        <TextBlock Text="Sessions:">
+            <TextBlock.Style>
+                <Style TargetType="TextBlock">
+                    <Setter Property="Visibility" Value="Collapsed"/>
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding HaveSaves}" Value="True">
+                            <Setter Property="Visibility" Value="Visible"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </TextBlock.Style>
+        </TextBlock>
         <ListBox Grid.Row="1" ItemsSource="{Binding Sessions}" SelectedItem="{Binding SelectedSession}">
-            
+            <ListBox.Style>
+                <Style TargetType="ListBox">
+                    <Setter Property="Visibility" Value="Collapsed"/>
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding HaveSaves}" Value="True">
+                            <Setter Property="Visibility" Value="Visible"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </ListBox.Style>
         </ListBox>
-        <Button Command="{Binding LoadCommand}" Style="{StaticResource btnStyle}" Grid.Row="2" Content="Load" Width="75" Height="22" Margin="0,0,150,0"/>
+
+        <TextBlock Grid.Row="1" Text="No saved sessions" VerticalAlignment="Center" HorizontalAlignment="Center">
+            <TextBlock.Style>
+                <Style TargetType="TextBlock">
+                    <Setter Property="Visibility" Value="Visible"/>
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding HaveSaves}" Value="True">
+                            <Setter Property="Visibility" Value="Collapsed"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </TextBlock.Style>
+        </TextBlock>
+
+        <Button Command="{Binding LoadCommand}" Style="{StaticResource btnStyle}" Grid.Row="2" Content="Load" Width="75" Height="22" Margin="0,0,150,0">
+             <i1:Interaction.Triggers>
+                <i1:EventTrigger EventName="Click">
+                    <ei:CallMethodAction TargetObject="{Binding ElementName=loadWindow}" MethodName="Close"/>
+                </i1:EventTrigger>
+            </i1:Interaction.Triggers>
+        </Button>
         <Button Command="{Binding RemoveCommand}" Style="{StaticResource btnStyle}" Grid.Row="2" Content="Remove" Width="75" Height="22" Margin="10,0,0,0"/>
-        <Button Command="{Binding CancelCommand}" Grid.Row="2" Content="Cancel" Width="75" Height="22" Margin="170,0,0,0"/>
+        <Button Grid.Row="2" Content="Cancel" Width="75" Height="22" Margin="170,0,0,0">
+            <i1:Interaction.Triggers>
+                <i1:EventTrigger EventName="Click">
+                    <ei:CallMethodAction TargetObject="{Binding ElementName=loadWindow}" MethodName="Close"/>
+                </i1:EventTrigger>
+            </i1:Interaction.Triggers>
+        </Button>
     </Grid>
 </Window>
