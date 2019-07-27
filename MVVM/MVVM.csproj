@@ -186,6 +186,9 @@
     <Compile Include="Other\Session.cs" />
     <Compile Include="ViewModel\EdgeVM.cs" />
     <Compile Include="ViewModel\NodeVM.cs" />
+    <Compile Include="View\SaveWindow.xaml.cs">
+      <DependentUpon>SaveWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="View\ShowResultWindow.xaml.cs">
       <DependentUpon>ShowResultWindow.xaml</DependentUpon>
     </Compile>
@@ -202,6 +205,10 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="View\SaveWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="View\ShowResultWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

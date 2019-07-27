@@ -266,7 +266,7 @@ namespace MVVM.ViewModel {
                         path += item.Name + " ";
                     }
                     //
-                    if (dialogService.Show(this) == true) { }
+                    if (dialogService.ShowSearchResult(this) == true) { }
                 }));
             }
         }
@@ -275,28 +275,42 @@ namespace MVVM.ViewModel {
         public MyRelayCommand SaveCommand {
             get {
                 return saveCommand ?? (saveCommand = new MyRelayCommand(obj => {
-                    using (SearchPathContext db = new SearchPathContext()) {
-                        Session session = new Session("first");
-                        ModelState modelState = new ModelState();
-                        modelState.Session = session;
-
-                        for (int i = 0; i < NodesVM.Count; i++) {
-                            NodesVM[i].Session = session;
-                            graph.Nodes[i].ModelState = modelState;
+                    if (dialogService.ShowSaveWindow() == true) { }
+                    if (dialogService.IsConfirmed) {
+                        if (dialogService.SessionName == "") {
+                            dialogService.ShowMessage("Session name cannot be empty");
                         }
+                        else {
+                            using (SearchPathContext db = new SearchPathContext()) {
+                                Session sessionWithSameName = db.Sessions.FirstOrDefault(o => o.Name == dialogService.SessionName);
+                                if (sessionWithSameName != null) {
+                                    dialogService.ShowMessage("Name already used");
+                                }
+                                else {
+                                    Session session = new Session(dialogService.SessionName);
+                                    ModelState modelState = new ModelState();
+                                    modelState.Session = session;
 
-                        for (int i = 0; i < EdgesVM.Count; i++) {
-                            EdgesVM[i].Session = session;
-                            graph.Edges[i].ModelState = modelState;
+                                    for (int i = 0; i < NodesVM.Count; i++) {
+                                        NodesVM[i].Session = session;
+                                        graph.Nodes[i].ModelState = modelState;
+                                    }
+
+                                    for (int i = 0; i < EdgesVM.Count; i++) {
+                                        EdgesVM[i].Session = session;
+                                        graph.Edges[i].ModelState = modelState;
+                                    }
+
+                                    db.Sessions.Add(session);
+                                    db.ModelStates.Add(modelState);
+                                    db.NodeVMs.AddRange(NodesVM);
+                                    db.EdgeVMs.AddRange(EdgesVM);
+                                    db.Nodes.AddRange(graph.Nodes);
+                                    db.Edges.AddRange(graph.Edges);
+                                    db.SaveChanges();
+                                }
+                            }
                         }
-
-                        db.Sessions.Add(session);
-                        db.ModelStates.Add(modelState);
-                        db.NodeVMs.AddRange(NodesVM);
-                        db.EdgeVMs.AddRange(EdgesVM);
-                        db.Nodes.AddRange(graph.Nodes);
-                        db.Edges.AddRange(graph.Edges);
-                        db.SaveChanges();
                     }
                 }));
             }

@@ -4,7 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
-        Title="ShowResultWindow" Height="200" Width="300" WindowStartupLocation="CenterScreen">
+        Title="Search completed" Height="200" Width="300" WindowStartupLocation="CenterOwner">
     <Grid>
         <TextBlock Margin="0 3 0 0">Shortest path between</TextBlock>
         <Canvas Background="Transparent" Width="25" Height="25" Margin="124,0,142,145">
