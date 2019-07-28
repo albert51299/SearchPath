@@ -7,7 +7,7 @@ namespace MVVM.ViewModel {
     class SearchResultViewModel {
         public ObservableCollection<ResultNodeVM> NodesVM { get; set; } = new ObservableCollection<ResultNodeVM>();
         public ObservableCollection<EdgeVM> EdgesVM { get; set; }
-        public ObservableCollection<ResultNodeVM> PathNodesVM = new ObservableCollection<ResultNodeVM>();
+        public ObservableCollection<ResultNodeVM> PathNodesVM { get; set; } = new ObservableCollection<ResultNodeVM>();
         public bool PathExist { get; set; }
         public string Start { get; set; }
         public string Terminal { get; set; }
@@ -29,6 +29,7 @@ namespace MVVM.ViewModel {
                     }
                     else {
                         NodesVM.Add(new ResultNodeVM(item.Name, item.X, item.Y, item.Selected, true));
+                        NodesVM.Last().Index = PathNodesVM.Count;
                         PathNodesVM.Add(NodesVM.Last());
                     }
                 }

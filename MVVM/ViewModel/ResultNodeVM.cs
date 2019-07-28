@@ -5,6 +5,7 @@
         public double Y { get; set; }
         public bool Selected { get; set; }
         public bool BelongPath { get; set; }
+        public int Index { get; set; }
 
         public ResultNodeVM(string name, double x, double y, bool selected, bool belongPath) {
             Name = name;

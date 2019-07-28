@@ -185,6 +185,7 @@
     <Compile Include="Other\Commands.cs" />
     <Compile Include="Other\EventConverters.cs" />
     <Compile Include="Other\FocusExtension.cs" />
+    <Compile Include="Other\GridHeplers.cs" />
     <Compile Include="Other\SearchPathContext.cs" />
     <Compile Include="Other\Session.cs" />
     <Compile Include="ViewModel\EdgeVM.cs" />
