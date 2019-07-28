@@ -1,5 +1,7 @@
-﻿using MVVM.View;
+﻿using MVVM.Model;
+using MVVM.View;
 using MVVM.ViewModel;
+using System.Collections.ObjectModel;
 using System.Windows;
 
 namespace MVVM.Other {
@@ -9,7 +11,7 @@ namespace MVVM.Other {
         bool ShowSaveWindow();
         bool ShowLoadWindow();
         void ShowMessage(string message);
-        bool ShowSearchResultWindow(object viewModel);
+        bool ShowSearchResultWindow(ObservableCollection<NodeVM> nodes, ObservableCollection<EdgeVM> edges, SearchResult searchResult);
     }
 
     class DefaultDialogService : IDialogService {
@@ -45,10 +47,11 @@ namespace MVVM.Other {
             MessageBox.Show(message);
         }
 
-        public bool ShowSearchResultWindow(object viewModel) {
+        public bool ShowSearchResultWindow(ObservableCollection<NodeVM> nodes, ObservableCollection<EdgeVM> edges, SearchResult searchResult) {
             SearchResultWindow window = new SearchResultWindow();
-            window.Owner = owner;
+            SearchResultViewModel viewModel = new SearchResultViewModel(nodes, edges, searchResult);
             window.DataContext = viewModel;
+            window.Owner = owner;
             if (window.ShowDialog() == true) {
                 return true;
             }

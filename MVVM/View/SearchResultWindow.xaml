@@ -4,22 +4,36 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
-        Title="Search completed" Height="200" Width="300" WindowStartupLocation="CenterOwner"
+        Title="Search completed" Height="550" Width="800" WindowStartupLocation="CenterOwner"
         ResizeMode="CanMinimize">
     <Grid>
-        <TextBlock Margin="0 3 0 0">Shortest path between</TextBlock>
-        <Canvas Background="Transparent" Width="25" Height="25" Margin="124,0,142,145">
-            <Ellipse Width="25" Height="25" Stroke="Black" Fill="Gray"></Ellipse>
-            <TextBlock Text="{Binding strStartNode}" Margin="5 3 0 0"></TextBlock>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="55"/>
+            <RowDefinition Height="0.72*"/>
+            <RowDefinition Height="20"/>
+            <RowDefinition Height="0.28*"/>
+        </Grid.RowDefinitions>
+        <TextBlock Grid.Row="0" Text="Shortest path between" Margin="5,3,0,0"/>
+        <Canvas Grid.Row="0" Width="25" Height="25" Background="Transparent" Margin="0,0,515,145">
+            <Ellipse Fill="Red" Stroke="Black" StrokeThickness="2" Width="25" Height="25"/>
+            <TextBlock Background="Transparent" Text="{Binding Start}" FontWeight="Bold" Margin="5 3 0 0"></TextBlock>
         </Canvas>
-        <TextBlock Margin="155 3 0 0">and</TextBlock>
-        <Canvas Background="Transparent" Width="25" Height="25" Margin="180,0,142,145">
-            <Ellipse Width="25" Height="25" Stroke="Black" Fill="Gray"></Ellipse>
-            <TextBlock Text="{Binding strEndNode}" Margin="5 3 0 0"></TextBlock>
+        <TextBlock Grid.Row="0" Margin="157 3 0 0" Text="and"/>
+        <Canvas Grid.Row="0" Width="25" Height="25" Background="Transparent" Margin="0,0,410,145">
+            <Ellipse Fill="Red" Stroke="Black" StrokeThickness="2" Width="25" Height="25"/>
+            <TextBlock Background="Transparent" Text="{Binding Terminal}" FontWeight="Bold" Margin="5 3 0 0"></TextBlock>
         </Canvas>
-        <TextBlock Margin="210 3 0 0">is</TextBlock>
-        <TextBlock Margin="220 3 0 0" Text="{Binding length}"></TextBlock>
-        <TextBlock Margin="0 25 0 0">Path:</TextBlock>
-        <TextBlock Text="{Binding path}" Margin="30 25 0 0"></TextBlock>
+        <TextBlock Grid.Row="0" Margin="212 3 0 0" Text="is"/>
+        <TextBlock Margin="224 3 0 0" Text="{Binding Length}" FontWeight="Bold"></TextBlock>
+        
+        <Canvas Grid.Row="1" Margin="5,5,5,5" Background="Transparent">
+
+        </Canvas>
+
+        <TextBlock Grid.Row="2" Text="Path:" HorizontalAlignment="Left" Margin="5,0,0,0" Width="30" Height="16" VerticalAlignment="Bottom"/>
+        
+        <Canvas Grid.Row="3" Margin="5,5,5,5" Background="Transparent">
+
+        </Canvas>
     </Grid>
 </Window>

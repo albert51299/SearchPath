@@ -190,6 +190,8 @@
     <Compile Include="ViewModel\EdgeVM.cs" />
     <Compile Include="ViewModel\LoadViewModel.cs" />
     <Compile Include="ViewModel\NodeVM.cs" />
+    <Compile Include="ViewModel\ResultNodeVM.cs" />
+    <Compile Include="ViewModel\SearchResultViewModel.cs" />
     <Compile Include="View\LoadWindow.xaml.cs">
       <DependentUpon>LoadWindow.xaml</DependentUpon>
     </Compile>

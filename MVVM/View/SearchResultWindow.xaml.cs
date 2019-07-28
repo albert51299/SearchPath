@@ -1,4 +1,7 @@
-﻿using System.Windows;
+﻿using MVVM.Model;
+using MVVM.ViewModel;
+using System.Collections.Generic;
+using System.Windows;
 
 namespace MVVM {
     /// <summary>

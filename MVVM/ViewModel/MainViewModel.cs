@@ -42,13 +42,6 @@ namespace MVVM.ViewModel {
         public double AddNodeMouseY { get; set; }
         public double MouseX { get; set; }
         public double MouseY { get; set; }
-        // temp
-        public string strStartNode { get; set; }
-        public string strEndNode { get; set; }
-        public string length { get; set; }
-        public string path { get; set; }
-        //
-        public SearchResult SearchResult { get; set; }
         public IDialogService dialogService;
 
         public MainViewModel(IDialogService dialogService) {
@@ -253,7 +246,6 @@ namespace MVVM.ViewModel {
                     FirstSelected = null;
                     SecondSelected = null;
                     Node.Number = 0;
-                    path = "";
                 }));
             }
         }
@@ -262,16 +254,7 @@ namespace MVVM.ViewModel {
         public MyRelayCommand SearchCommand {
             get {
                 return searchCommand ?? (searchCommand = new MyRelayCommand(obj => {
-                    SearchResult = graph.SearchPath(FirstSelected, SecondSelected);
-                    // temp
-                    strStartNode = firstSelected.Name;
-                    strEndNode = secondSelected.Name;
-                    length = SearchResult.PathLength.ToString();
-                    foreach (var item in SearchResult.Path) {
-                        path += item.Name + " ";
-                    }
-                    //
-                    if (dialogService.ShowSearchResultWindow(this) == true) { }
+                    if (dialogService.ShowSearchResultWindow(NodesVM, EdgesVM, graph.SearchPath(FirstSelected, SecondSelected)) == true) { }
                 }));
             }
         }
@@ -356,7 +339,6 @@ namespace MVVM.ViewModel {
                         FirstSelected = null;
                         SecondSelected = null;
                         Node.Number = NodesVM.Count;
-                        path = "";
                     }
                 }));
             }
