@@ -34,7 +34,6 @@ namespace MVVM.ViewModel {
             Y2 = y2;
             X = (x1 + x2) / 2 - widthForRectangle / 2 + widthForRectangle / 5;
             Y = (y1 + y2) / 2 - heightForRectangle / 2;
-            Selected = true;
         }
 
         public void InvertSelected() {

@@ -1,4 +1,5 @@
-﻿using MVVM.Model;
+﻿using Microsoft.EntityFrameworkCore;
+using MVVM.Model;
 using MVVM.Other;
 using System;
 using System.Collections.Generic;
@@ -122,7 +123,7 @@ namespace MVVM.ViewModel {
                 return canvasMouseDown ?? (canvasMouseDown = new MyRelayCommand(obj => {
                     if (AllowNode) {
                         Node newNode = new Node();
-                        graph.AddNode(newNode);
+                        graph.Nodes.Add(newNode);
                         NodesVM.Add(new NodeVM(newNode.Name, AddNodeMouseX, AddNodeMouseY));
                     }
                 }));
@@ -185,8 +186,10 @@ namespace MVVM.ViewModel {
                         Node secondNode = graph.Nodes.FirstOrDefault(o => o.Name == obj.Name);
                         if ((FirstNode != secondNode) && (FirstNode != null)) {
                             EdgeWithoutCost = new Edge(FirstNode.Index, secondNode.Index);
-                            EdgesVMWithoutCost.Add(new EdgeVM(FirstX, FirstY, MouseX, MouseY));
-                            EdgesVM.Add(EdgesVMWithoutCost.Last());
+                            EdgeVM edgeVM = new EdgeVM(FirstX, FirstY, MouseX, MouseY);
+                            edgeVM.InvertSelected();
+                            EdgesVMWithoutCost.Add(edgeVM);
+                            EdgesVM.Add(edgeVM);
                             FirstNode = null;
                             AwaitCost = true;
                         }
@@ -241,9 +244,11 @@ namespace MVVM.ViewModel {
         public MyRelayCommand ClearCommand {
             get {
                 return clearCommand ?? (clearCommand = new MyRelayCommand(obj => {
-                    graph = new Graph();
-                    NodesVM = new ObservableCollection<NodeVM>();
-                    EdgesVM = new ObservableCollection<EdgeVM>();
+                    graph.Nodes.Clear();
+                    graph.Edges.Clear();
+                    graph.MatrixReset();
+                    NodesVM.Clear();
+                    EdgesVM.Clear();
                     FirstNode = null;
                     FirstSelected = null;
                     SecondSelected = null;
@@ -323,7 +328,35 @@ namespace MVVM.ViewModel {
                 return loadCommand ?? (loadCommand = new MyRelayCommand(obj => {
                     if (dialogService.ShowLoadWindow() == true) { }
                     if (dialogService.IsConfirmed) {
-                        // load ...
+                        Session session;
+                        using (SearchPathContext db = new SearchPathContext()) {
+                            session = db.Sessions
+                                .Include(o => o.ModelState)
+                                    .ThenInclude(o => o.Nodes)
+                                .Include(o => o.ModelState)
+                                    .ThenInclude(o => o.Edges)
+                                .Include(o => o.NodeVMs)
+                                .Include(o => o.EdgeVMs)
+                                .FirstOrDefault(o => o.Name == dialogService.SessionName);
+                        }
+                        NodesVM.Clear();
+                        EdgesVM.Clear();
+                        graph.Nodes.Clear();
+                        graph.Edges.Clear();
+                        graph.MatrixReset();
+                        for (int i = 0; i < session.NodeVMs.Count; i++) {
+                            NodesVM.Add(session.NodeVMs.ElementAt(i));
+                            graph.Nodes.Add(session.ModelState.Nodes.ElementAt(i));
+                        }
+                        for (int i = 0; i < session.EdgeVMs.Count; i++) {
+                            EdgesVM.Add(session.EdgeVMs.ElementAt(i));
+                            graph.AddEdge(session.ModelState.Edges.ElementAt(i));
+                        }
+                        FirstNode = null;
+                        FirstSelected = null;
+                        SecondSelected = null;
+                        Node.Number = NodesVM.Count;
+                        path = "";
                     }
                 }));
             }

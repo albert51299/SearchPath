@@ -8,6 +8,7 @@
         xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
         xmlns:i1="http://schemas.microsoft.com/expression/2010/interactivity" 
         xmlns:ei="http://schemas.microsoft.com/expression/2010/interactions"
+        ResizeMode="CanMinimize"
         Name="loadWindow">
 
     <i:Interaction.Triggers>

@@ -8,6 +8,7 @@
         xmlns:cmd="clr-namespace:GalaSoft.MvvmLight.Command;assembly=GalaSoft.MvvmLight.Platform"
         mc:Ignorable="d"
         Title="Search of the shortest path" Height="450" Width="800" WindowStartupLocation="CenterScreen"
+        ResizeMode="CanMinimize"
         x:Name="mainWindow">
     <Window.Resources>
         <Style TargetType="RadioButton">
@@ -177,7 +178,7 @@
                             </Line>
                             <Border Background="White" BorderThickness="2" Width="25" Height="20"
                                     Canvas.Left="{Binding X}" Canvas.Top="{Binding Y}">
-                                <TextBlock HorizontalAlignment="Center" Text="{Binding Cost}">
+                                <TextBlock HorizontalAlignment="Center" Text="{Binding Cost}" FontWeight="Bold">
                                     <TextBlock.Style>
                                         <Style TargetType="TextBlock">
                                             <Style.Triggers>
@@ -246,7 +247,7 @@
                                 </Ellipse.Style>
 
                             </Ellipse>
-                            <TextBlock Background="Transparent" Text="{Binding Name}" Margin="5 5 0 0">
+                            <TextBlock Background="Transparent" Text="{Binding Name}" Margin="5 5 0 0" FontWeight="Bold">
                                 
                                 <i:Interaction.Triggers>
                                     <i:EventTrigger EventName="MouseDown">

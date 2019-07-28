@@ -9,21 +9,21 @@ namespace MVVM.Model {
         public List<Edge> Edges { get; set; } = new List<Edge>();
 
         public Graph() {
-            for (int i = 0; i < n; i++) {
-                for (int j = 0; j < n; j++) {
-                    matrix[i, j] = -1;
-                }
-            }
-        }
-
-        public void AddNode(Node node) {
-            Nodes.Add(node);
+            MatrixReset();
         }
 
         public void AddEdge(Edge edge) {
             Edges.Add(edge);
             matrix[edge.FirstIndex, edge.SecondIndex] = edge.Cost;
             matrix[edge.SecondIndex, edge.FirstIndex] = edge.Cost;
+        }
+
+        public void MatrixReset() {
+            for (int i = 0; i < n; i++) {
+                for (int j = 0; j < n; j++) {
+                    matrix[i, j] = -1;
+                }
+            }
         }
 
         public SearchResult SearchPath(Node start, Node end) {
