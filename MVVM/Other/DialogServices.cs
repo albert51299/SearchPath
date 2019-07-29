@@ -11,7 +11,8 @@ namespace MVVM.Other {
         bool ShowSaveWindow();
         bool ShowLoadWindow();
         void ShowMessage(string message);
-        bool ShowSearchResultWindow(ObservableCollection<NodeVM> nodes, ObservableCollection<EdgeVM> edges, SearchResult searchResult);
+        bool ShowConfirmWindow(string question, string header);
+        bool ShowSearchResultWindow(ObservableCollection<NodeVM> nodes, ObservableCollection<EdgeVM> edges, Graph graph, SearchResult searchResult);
     }
 
     class DefaultDialogService : IDialogService {
@@ -47,9 +48,19 @@ namespace MVVM.Other {
             MessageBox.Show(message);
         }
 
-        public bool ShowSearchResultWindow(ObservableCollection<NodeVM> nodes, ObservableCollection<EdgeVM> edges, SearchResult searchResult) {
+        public bool ShowConfirmWindow(string question, string header) {
+            ConfirmWindow window = new ConfirmWindow(question, header);
+            window.Owner = owner;
+            if (window.ShowDialog() == true) {
+                return true;
+            }
+            IsConfirmed = window.Confirmed;
+            return false;
+        }
+
+        public bool ShowSearchResultWindow(ObservableCollection<NodeVM> nodes, ObservableCollection<EdgeVM> edges, Graph graph, SearchResult searchResult) {
             SearchResultWindow window = new SearchResultWindow();
-            SearchResultViewModel viewModel = new SearchResultViewModel(nodes, edges, searchResult);
+            SearchResultViewModel viewModel = new SearchResultViewModel(nodes, edges, graph, searchResult);
             window.DataContext = viewModel;
             window.Owner = owner;
             if (window.ShowDialog() == true) {

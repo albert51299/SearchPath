@@ -15,7 +15,15 @@ namespace MVVM.ViewModel {
         public double X { get; set; }
         public double Y { get; set; }
         [NotMapped]
-        public bool Selected { get; set; }
+        private bool selected;
+        [NotMapped]
+        public bool Selected {
+            get { return selected; }
+            set {
+                selected = value;
+                OnPropertyChanged("Selected");
+            }
+        }
         private int cost;
         public int Cost {
             get { return cost; }
@@ -38,7 +46,6 @@ namespace MVVM.ViewModel {
 
         public void InvertSelected() {
             Selected = !Selected;
-            OnPropertyChanged("Selected");
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

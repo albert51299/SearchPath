@@ -4,9 +4,17 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MVVM.Other"
+        xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
         mc:Ignorable="d"
         Title="Search completed" Height="540" Width="800" WindowStartupLocation="CenterOwner"
         ResizeMode="CanMinimize">
+
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="Closed">
+            <i:InvokeCommandAction Command="{Binding ClosedCommand}" />
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
+    
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="55"/>
@@ -41,8 +49,18 @@
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
                         <Canvas Background="Transparent">
-                            <Line Stroke="Black" StrokeThickness="2" 
+                            <Line StrokeThickness="2" 
                                   X1="{Binding X1}" Y1="{Binding Y1}" X2="{Binding X2}" Y2="{Binding Y2}">
+                                <Line.Style>
+                                    <Style TargetType="Line">
+                                        <Setter Property="Stroke" Value="Black"/>
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding Selected}" Value="True">
+                                                <Setter Property="Stroke" Value="Green"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Line.Style>
                             </Line>
                             <Border Background="White" BorderThickness="2" Width="25" Height="20"
                                     Canvas.Left="{Binding X}" Canvas.Top="{Binding Y}">

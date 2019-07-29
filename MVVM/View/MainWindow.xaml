@@ -28,7 +28,7 @@
                 <ContentControl Content="{TemplateBinding Content}"/>
             </Border>
         </ControlTemplate>
-        <local:MouseButtonEventArgsToPointConverter x:Key="myConverter"/>
+        <local:MouseButtonEventArgsToPointConverter x:Key="toPointConverter"/>
     </Window.Resources>
     <Grid>
         <Grid.RowDefinitions>
@@ -56,7 +56,7 @@
             <Image Source="/Resources/Select.png"/>
         </RadioButton>
         
-        <Button Grid.Row="1" Command="{Binding ClearCommand}" Content="Clear" Height="22" Width="75" HorizontalAlignment="Right" Margin="0,0,82,0"/>
+        <Button Grid.Row="1" Command="{Binding ClearCommand}" Content="Reset graph" Height="22" Width="75" HorizontalAlignment="Right" Margin="0,0,82,0"/>
         <Button Grid.Row="1" Command="{Binding SearchCommand}" Content="Search path" Height="22" Width="75" HorizontalAlignment="Right" Margin="0,0,2,0">
             <Button.Style>
                 <Style TargetType="Button">
@@ -155,7 +155,7 @@
                 <i:EventTrigger EventName="MouseMove">
                     <cmd:EventToCommand
                                     Command="{Binding CanvasMouseMove}"
-                                    EventArgsConverter="{StaticResource myConverter}"
+                                    EventArgsConverter="{StaticResource toPointConverter}"
                                     EventArgsConverterParameter="{Binding ElementName=parentCanvas}"
                                     PassEventArgsToCommand="True" />
                 </i:EventTrigger>

@@ -237,15 +237,18 @@ namespace MVVM.ViewModel {
         public MyRelayCommand ClearCommand {
             get {
                 return clearCommand ?? (clearCommand = new MyRelayCommand(obj => {
-                    graph.Nodes.Clear();
-                    graph.Edges.Clear();
-                    graph.MatrixReset();
-                    NodesVM.Clear();
-                    EdgesVM.Clear();
-                    FirstNode = null;
-                    FirstSelected = null;
-                    SecondSelected = null;
-                    Node.Number = 0;
+                    if (dialogService.ShowConfirmWindow("Are you sure?", "Reset confirmation") == true) { }
+                    if (dialogService.IsConfirmed) {
+                        graph.Nodes.Clear();
+                        graph.Edges.Clear();
+                        graph.MatrixReset();
+                        NodesVM.Clear();
+                        EdgesVM.Clear();
+                        FirstNode = null;
+                        FirstSelected = null;
+                        SecondSelected = null;
+                        Node.Number = 0;
+                    }
                 }));
             }
         }
@@ -254,7 +257,13 @@ namespace MVVM.ViewModel {
         public MyRelayCommand SearchCommand {
             get {
                 return searchCommand ?? (searchCommand = new MyRelayCommand(obj => {
-                    if (dialogService.ShowSearchResultWindow(NodesVM, EdgesVM, graph.SearchPath(FirstSelected, SecondSelected)) == true) { }
+                    SearchResult searchResult = graph.SearchPath(FirstSelected, SecondSelected);
+                    if (searchResult.PathExist) {
+                        if (dialogService.ShowSearchResultWindow(NodesVM, EdgesVM, graph, searchResult) == true) { }
+                    }
+                    else {
+                        dialogService.ShowMessage("No path between selected nodes");
+                    }
                 }));
             }
         }
@@ -296,9 +305,9 @@ namespace MVVM.ViewModel {
                                     db.Nodes.AddRange(graph.Nodes);
                                     db.Edges.AddRange(graph.Edges);
                                     db.SaveChanges();
+                                    dialogService.ShowMessage("Session saved");
                                 }
                             }
-                            dialogService.ShowMessage("Session saved");
                         }
                     }
                 }));

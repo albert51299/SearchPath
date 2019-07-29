@@ -183,7 +183,7 @@
     <Compile Include="Model\Node.cs" />
     <Compile Include="Other\DialogServices.cs" />
     <Compile Include="Other\Commands.cs" />
-    <Compile Include="Other\EventConverters.cs" />
+    <Compile Include="Other\Converters.cs" />
     <Compile Include="Other\FocusExtension.cs" />
     <Compile Include="Other\GridHeplers.cs" />
     <Compile Include="Other\SearchPathContext.cs" />
@@ -193,6 +193,9 @@
     <Compile Include="ViewModel\NodeVM.cs" />
     <Compile Include="ViewModel\ResultNodeVM.cs" />
     <Compile Include="ViewModel\SearchResultViewModel.cs" />
+    <Compile Include="View\ConfirmWindow.xaml.cs">
+      <DependentUpon>ConfirmWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="View\LoadWindow.xaml.cs">
       <DependentUpon>LoadWindow.xaml</DependentUpon>
     </Compile>
@@ -202,6 +205,10 @@
     <Compile Include="View\SearchResultWindow.xaml.cs">
       <DependentUpon>SearchResultWindow.xaml</DependentUpon>
     </Compile>
+    <Page Include="View\ConfirmWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="View\LoadWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
