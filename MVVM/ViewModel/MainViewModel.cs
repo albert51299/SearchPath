@@ -178,13 +178,25 @@ namespace MVVM.ViewModel {
                     if (AllowEdge) {
                         Node secondNode = graph.Nodes.FirstOrDefault(o => o.Index == obj.Index);
                         if ((FirstNode != secondNode) && (FirstNode != null)) {
-                            EdgeWithoutCost = new Edge(FirstNode.Index, secondNode.Index);
-                            EdgeVM edgeVM = new EdgeVM(FirstNode.Index, secondNode.Index, FirstX, FirstY, MouseX, MouseY);
-                            edgeVM.InvertSelected();
-                            EdgesVMWithoutCost.Add(edgeVM);
-                            EdgesVM.Add(edgeVM);
+
+                            Edge check1 = graph.Edges
+                            .FirstOrDefault(o => o.FirstIndex == FirstNode.Index && o.SecondIndex == secondNode.Index);
+
+                            Edge check2 = graph.Edges
+                            .FirstOrDefault(o => o.FirstIndex == secondNode.Index && o.SecondIndex == FirstNode.Index);
+
+                            if ((check1 == null) && (check2 == null)) {
+                                EdgeWithoutCost = new Edge(FirstNode.Index, secondNode.Index);
+                                EdgeVM edgeVM = new EdgeVM(FirstNode.Index, secondNode.Index, FirstX, FirstY, MouseX, MouseY);
+                                edgeVM.InvertSelected();
+                                EdgesVMWithoutCost.Add(edgeVM);
+                                EdgesVM.Add(edgeVM);
+                                AwaitCost = true;
+                            }
+                            else {
+                                dialogService.ShowMessage("Edge with same indices already exist");
+                            }
                             FirstNode = null;
-                            AwaitCost = true;
                         }
                     }
                 }));
