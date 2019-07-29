@@ -14,6 +14,8 @@ namespace MVVM.ViewModel {
         public double Y2 { get; set; }
         public double X { get; set; }
         public double Y { get; set; }
+        public int FirstIndex { get; set; }
+        public int SecondIndex { get; set; }
         [NotMapped]
         private bool selected;
         [NotMapped]
@@ -33,7 +35,9 @@ namespace MVVM.ViewModel {
             }
         }
 
-        public EdgeVM(double x1, double y1, double x2, double y2) {
+        public EdgeVM(int firstIndex, int secondIndex, double x1, double y1, double x2, double y2) {
+            FirstIndex = firstIndex;
+            SecondIndex = secondIndex;
             double widthForRectangle = 25;
             double heightForRectangle = 15;
             X1 = x1;

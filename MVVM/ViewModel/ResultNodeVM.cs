@@ -5,9 +5,11 @@
         public double Y { get; set; }
         public bool Selected { get; set; }
         public bool BelongPath { get; set; }
+        public int PathIndex { get; set; }
         public int Index { get; set; }
 
-        public ResultNodeVM(string name, double x, double y, bool selected, bool belongPath) {
+        public ResultNodeVM(int index, string name, double x, double y, bool selected, bool belongPath) {
+            Index = index;
             Name = name;
             X = x;
             Y = y;

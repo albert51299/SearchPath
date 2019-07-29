@@ -13,21 +13,25 @@ namespace MVVM.ViewModel {
         public string Terminal { get; set; }
         public string Length { get; set; }
 
-        public SearchResultViewModel(ObservableCollection<NodeVM> nodes, ObservableCollection<EdgeVM> edges, Graph graph, SearchResult searchResult) {
+        public SearchResultViewModel(ObservableCollection<NodeVM> nodes, ObservableCollection<EdgeVM> edges, SearchResult searchResult) {
             Start = searchResult.Path.First().Name;
             Terminal = searchResult.Path.Last().Name;
             Length = searchResult.PathLength.ToString();
 
             foreach (var item in nodes) {
-                var node = searchResult.Path.FirstOrDefault(o => o.Name == item.Name);
+                var node = searchResult.Path.FirstOrDefault(o => o.Index == item.Index);
                 if (node == null) {
-                    NodesVM.Add(new ResultNodeVM(item.Name, item.X, item.Y, item.Selected, false));
+                    NodesVM.Add(new ResultNodeVM(item.Index, item.Name, item.X, item.Y, item.Selected, false));
                 }
                 else {
-                    NodesVM.Add(new ResultNodeVM(item.Name, item.X, item.Y, item.Selected, true));
-                    NodesVM.Last().Index = PathNodesVM.Count;
-                    PathNodesVM.Add(NodesVM.Last());
+                    NodesVM.Add(new ResultNodeVM(item.Index, item.Name, item.X, item.Y, item.Selected, true));
                 }
+            }
+
+            for (int i = 0; i < searchResult.Path.Count; i++) {
+                ResultNodeVM node = NodesVM.FirstOrDefault(o => o.Index == searchResult.Path[i].Index);
+                node.PathIndex = i;
+                PathNodesVM.Add(node);
             }
 
             EdgesVM = edges;
@@ -35,9 +39,11 @@ namespace MVVM.ViewModel {
                 int firstInd = searchResult.Path[i].Index;
                 int secondInd = searchResult.Path[i + 1].Index;
 
-                var edge = graph.Edges.FirstOrDefault(o => o.FirstIndex == firstInd && o.SecondIndex == secondInd);
-                int edgeInd = graph.Edges.IndexOf(edge);
-                EdgesVM[edgeInd].InvertSelected();
+                EdgeVM edge = EdgesVM.FirstOrDefault(o => o.FirstIndex == firstInd && o.SecondIndex == secondInd);
+                if (edge == null) {
+                    edge = EdgesVM.FirstOrDefault(o => o.FirstIndex == secondInd && o.SecondIndex == firstInd);
+                }
+                edge.InvertSelected();
             }
         }
 

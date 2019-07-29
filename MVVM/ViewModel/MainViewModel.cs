@@ -117,7 +117,7 @@ namespace MVVM.ViewModel {
                     if (AllowNode) {
                         Node newNode = new Node();
                         graph.Nodes.Add(newNode);
-                        NodesVM.Add(new NodeVM(newNode.Name, AddNodeMouseX, AddNodeMouseY));
+                        NodesVM.Add(new NodeVM(newNode.Index, newNode.Name, AddNodeMouseX, AddNodeMouseY));
                     }
                 }));
             }
@@ -139,13 +139,13 @@ namespace MVVM.ViewModel {
             get {
                 return nodeMouseDown ?? (nodeMouseDown = new RelayCommand<NodeVM>(obj => {
                     if (AllowEdge) {
-                        FirstNode = graph.Nodes.FirstOrDefault(o => o.Name == obj.Name);
+                        FirstNode = graph.Nodes.FirstOrDefault(o => o.Index == obj.Index);
                         FirstX = MouseX;
                         FirstY = MouseY;
                     }
                     if (AllowSelect) {
-                        NodesVM.FirstOrDefault(o => o.Name == obj.Name).InvertSelected();
-                        Node currentNode = graph.Nodes.FirstOrDefault(o => o.Name == obj.Name);
+                        NodesVM.FirstOrDefault(o => o.Index == obj.Index).InvertSelected();
+                        Node currentNode = graph.Nodes.FirstOrDefault(o => o.Index == obj.Index);
                         if (currentNode == FirstSelected) {
                             FirstSelected = null;
                         }
@@ -154,8 +154,8 @@ namespace MVVM.ViewModel {
                         }
                         else {
                             if ((FirstSelected != null) && (SecondSelected != null)) {
-                                NodesVM.FirstOrDefault(o => o.Name == FirstSelected.Name).InvertSelected();
-                                NodesVM.FirstOrDefault(o => o.Name == SecondSelected.Name).InvertSelected();
+                                NodesVM.FirstOrDefault(o => o.Index == FirstSelected.Index).InvertSelected();
+                                NodesVM.FirstOrDefault(o => o.Index == SecondSelected.Index).InvertSelected();
                                 FirstSelected = null;
                                 SecondSelected = null;
                             }
@@ -176,10 +176,10 @@ namespace MVVM.ViewModel {
             get {
                 return nodeMouseUp ?? (nodeMouseUp = new RelayCommand<NodeVM>(obj => {
                     if (AllowEdge) {
-                        Node secondNode = graph.Nodes.FirstOrDefault(o => o.Name == obj.Name);
+                        Node secondNode = graph.Nodes.FirstOrDefault(o => o.Index == obj.Index);
                         if ((FirstNode != secondNode) && (FirstNode != null)) {
                             EdgeWithoutCost = new Edge(FirstNode.Index, secondNode.Index);
-                            EdgeVM edgeVM = new EdgeVM(FirstX, FirstY, MouseX, MouseY);
+                            EdgeVM edgeVM = new EdgeVM(FirstNode.Index, secondNode.Index, FirstX, FirstY, MouseX, MouseY);
                             edgeVM.InvertSelected();
                             EdgesVMWithoutCost.Add(edgeVM);
                             EdgesVM.Add(edgeVM);
@@ -195,23 +195,27 @@ namespace MVVM.ViewModel {
         public MyRelayCommand SetEdgeCost {
             get {
                 return setEdgeCost ?? (setEdgeCost = new MyRelayCommand(obj => {
-                    EdgeVM current = EdgesVMWithoutCost.Last();
                     try {
                         int cost = Convert.ToInt32(obj as string);
                         if (cost < 0) {
                             throw new Exception();
                         }
+                        EdgeVM current = EdgesVMWithoutCost.Last();
                         EdgeWithoutCost.Cost = cost;
                         graph.AddEdge(EdgeWithoutCost);
                         current.Cost = cost;
                         current.InvertSelected();
+                        EdgesVMWithoutCost.Remove(current);
                     }
                     catch (Exception) {
-                        EdgesVM.Remove(current);
+
                     }
                     finally {
+                        foreach (var item in EdgesVMWithoutCost) {
+                            EdgesVM.Remove(item);
+                        }
+                        EdgesVMWithoutCost.Clear();
                         EdgeWithoutCost = null;
-                        EdgesVMWithoutCost.Remove(current);
                         CostField = null;
                         AwaitCost = false;
                     }
@@ -226,6 +230,7 @@ namespace MVVM.ViewModel {
                     foreach (var item in EdgesVMWithoutCost) {
                         EdgesVM.Remove(item);
                     }
+                    EdgesVMWithoutCost.Clear();
                     EdgeWithoutCost = null;
                     CostField = null;
                     AwaitCost = false;
@@ -259,7 +264,7 @@ namespace MVVM.ViewModel {
                 return searchCommand ?? (searchCommand = new MyRelayCommand(obj => {
                     SearchResult searchResult = graph.SearchPath(FirstSelected, SecondSelected);
                     if (searchResult.PathExist) {
-                        if (dialogService.ShowSearchResultWindow(NodesVM, EdgesVM, graph, searchResult) == true) { }
+                        if (dialogService.ShowSearchResultWindow(NodesVM, EdgesVM, searchResult) == true) { }
                     }
                     else {
                         dialogService.ShowMessage("No path between selected nodes");

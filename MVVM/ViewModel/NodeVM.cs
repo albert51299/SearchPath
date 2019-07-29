@@ -11,10 +11,20 @@ namespace MVVM.ViewModel {
         public string Name { get; set; }
         public double X { get; set; }
         public double Y { get; set; }
+        public int Index { get; set; }
         [NotMapped]
-        public bool Selected { get; set; }
+        private bool selected;
+        [NotMapped]
+        public bool Selected {
+            get { return selected; }
+            set {
+                selected = value;
+                OnPropertyChanged("Selected");
+            }
+        }
 
-        public NodeVM(string name, double x, double y) {
+        public NodeVM(int index, string name, double x, double y) {
+            Index = index;
             Name = name;
             X = x;
             Y = y;
@@ -22,7 +32,6 @@ namespace MVVM.ViewModel {
 
         public void InvertSelected() {
             Selected = !Selected;
-            OnPropertyChanged("Selected");
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

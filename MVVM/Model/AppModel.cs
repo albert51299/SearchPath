@@ -79,8 +79,7 @@ namespace MVVM.Model {
                     }
                 }
                 if (!pathExist) {
-                    return new SearchResult(false, 0, new List<Node>());
-
+                    return new SearchResult(false);
                 }
                 // search node with minimum weight and make it visited
                 int min = max;
@@ -125,6 +124,10 @@ namespace MVVM.Model {
         public bool PathExist { get; set; }
         public int PathLength { get; }
         public List<Node> Path { get; }
+
+        public SearchResult(bool exist) {
+            PathExist = exist;
+        }
 
         public SearchResult(bool exist, int length, List<Node> path) {
             PathExist = exist;

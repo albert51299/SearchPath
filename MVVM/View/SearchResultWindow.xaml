@@ -166,7 +166,7 @@
                 </ItemsControl.ItemTemplate>
                 <ItemsControl.ItemContainerStyle>
                     <Style>
-                        <Setter Property="Grid.Column" Value="{Binding Index}" />
+                        <Setter Property="Grid.Column" Value="{Binding PathIndex}" />
                     </Style>
                 </ItemsControl.ItemContainerStyle>
             </ItemsControl>
