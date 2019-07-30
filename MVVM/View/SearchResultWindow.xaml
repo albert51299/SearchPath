@@ -18,9 +18,9 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="55"/>
-            <RowDefinition Height="0.85*"/>
+            <RowDefinition Height="0.86*"/>
             <RowDefinition Height="20"/>
-            <RowDefinition Height="0.15*"/>
+            <RowDefinition Height="0.14*"/>
         </Grid.RowDefinitions>
         <TextBlock Grid.Row="0" Text="Shortest path between" Margin="5,3,0,0"/>
         <Canvas Grid.Row="0" Width="25" Height="25" Background="Transparent" Margin="0,0,505,145">
@@ -138,38 +138,40 @@
 
         <TextBlock Grid.Row="2" Text="Path:" HorizontalAlignment="Left" Margin="5,0,0,0" Width="30" Height="16" VerticalAlignment="Bottom"/>
 
-        <Canvas Grid.Row="3" Margin="5,5,5,5" Background="Transparent">
-            <ItemsControl ItemsSource="{Binding PathNodesVM}">
-                <ItemsControl.ItemsPanel>
-                    <ItemsPanelTemplate>
-                        <Grid local:GridHelpers.ColumnCount="{Binding Path=PathNodesVM.Count}"/>
-                    </ItemsPanelTemplate>
-                </ItemsControl.ItemsPanel>
-                <ItemsControl.ItemTemplate>
-                    <DataTemplate>
-                        <Canvas Width="30" Height="30" Background="Transparent">
-                            <Ellipse Stroke="Black" StrokeThickness="2" Width="30" Height="30">
-                                <Ellipse.Style>
-                                    <Style TargetType="Ellipse">
-                                        <Setter Property="Fill" Value="Green"/>
-                                        <Style.Triggers>
-                                            <DataTrigger Binding="{Binding Selected}" Value="True">
-                                                <Setter Property="Fill" Value="Red"/>
-                                            </DataTrigger>
-                                        </Style.Triggers>
-                                    </Style>
-                                </Ellipse.Style>
-                            </Ellipse>
-                            <TextBlock Background="Transparent" Text="{Binding Name}" Margin="5 5 0 0" FontWeight="Bold"/>
-                        </Canvas>
-                    </DataTemplate>
-                </ItemsControl.ItemTemplate>
-                <ItemsControl.ItemContainerStyle>
-                    <Style>
-                        <Setter Property="Grid.Column" Value="{Binding PathIndex}" />
-                    </Style>
-                </ItemsControl.ItemContainerStyle>
-            </ItemsControl>
-        </Canvas>
+        <StackPanel Grid.Row="3" Margin="5,5,5,5">
+            <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled">
+                <ItemsControl ItemsSource="{Binding PathNodesVM}">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <Grid local:GridHelpers.ColumnCount="{Binding Path=PathNodesVM.Count}"/>
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Canvas Width="30" Height="30" Background="Transparent">
+                                <Ellipse Stroke="Black" StrokeThickness="2" Width="30" Height="30">
+                                    <Ellipse.Style>
+                                        <Style TargetType="Ellipse">
+                                            <Setter Property="Fill" Value="Green"/>
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding Selected}" Value="True">
+                                                    <Setter Property="Fill" Value="Red"/>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </Ellipse.Style>
+                                </Ellipse>
+                                <TextBlock Background="Transparent" Text="{Binding Name}" Margin="5 5 0 0" FontWeight="Bold"/>
+                            </Canvas>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                    <ItemsControl.ItemContainerStyle>
+                        <Style>
+                            <Setter Property="Grid.Column" Value="{Binding PathIndex}" />
+                        </Style>
+                    </ItemsControl.ItemContainerStyle>
+                </ItemsControl>
+            </ScrollViewer>
+        </StackPanel>
     </Grid>
 </Window>

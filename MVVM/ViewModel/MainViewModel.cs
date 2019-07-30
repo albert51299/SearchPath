@@ -306,11 +306,15 @@ namespace MVVM.ViewModel {
                                     modelState.Session = session;
 
                                     for (int i = 0; i < NodesVM.Count; i++) {
+                                        NodesVM[i].Id = new int();
+                                        graph.Nodes[i].Id = new int();
                                         NodesVM[i].Session = session;
                                         graph.Nodes[i].ModelState = modelState;
                                     }
 
                                     for (int i = 0; i < EdgesVM.Count; i++) {
+                                        EdgesVM[i].Id = new int();
+                                        graph.Edges[i].Id = new int();
                                         EdgesVM[i].Session = session;
                                         graph.Edges[i].ModelState = modelState;
                                     }
